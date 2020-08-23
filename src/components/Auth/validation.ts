@@ -15,40 +15,23 @@ class AuthValidation extends Validation {
     constructor() {
         super();
     }
-    /**
-     * @param {IUserModel} params
-     * @returns {Joi.ValidationResult<IUserModel >}
-     * @memberof UserValidation
-     */
-    createUser(params: IUserModel): Joi.ValidationResult {
+
+    getUserForLogin(params: IUserModel): Joi.ValidationResult {
         const schema: Joi.ObjectSchema = Joi.object().keys({
             password: Joi.string().required(),
-            email: Joi.string()
-                .email({
-                    minDomainSegments: 2,
-                })
-                .required(),
+            username: Joi.string().required()
         });
 
         return schema.validate(params);
     }
-    /**
-     * @param {IUserModel} params
-     * @returns {Joi.ValidationResult<IUserModel >}
-     * @memberof UserValidation
-     */
-    getUser(params: IUserModel): Joi.ValidationResult {
-        const schema: Joi.ObjectSchema = Joi.object().keys({
-            password: Joi.string().required(),
-            email: Joi.string()
-                .email({
-                    minDomainSegments: 2,
-                })
-                .required(),
-        });
 
-        return schema.validate(params);
-    }
+    // getUserByUUID(params: IUserModel): Joi.ValidationResult {
+    //     const schema: Joi.ObjectSchema = Joi.object().keys({
+    //         uuid: Joi.string().required()
+    //     });
+
+    //     return schema.validate(params);
+    // }
 }
 
 export default new AuthValidation();

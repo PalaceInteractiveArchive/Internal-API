@@ -40,10 +40,11 @@ class UserValidation extends Validation {
      * @memberof UserValidation
      */
     getUser(body: {
-        id: string;
+        uuid: string;
     }): Joi.ValidationResult {
+
         const schema: Joi.ObjectSchema = Joi.object().keys({
-            id: this.customJoi.objectId().required(),
+            uuid: Joi.string().uuid().required(),
         });
 
         return schema.validate(body);

@@ -7,6 +7,7 @@ import * as http from 'http';
 
 interface RequestWithUser extends Request {
     user: object | string;
+    token: string;
 }
 
 /**
@@ -28,9 +29,11 @@ export function isAuthenticated(req: RequestWithUser, res: Response, next: NextF
 
     if (token && token.indexOf('Bearer ') !== -1) {
         try {
-            const user: object | string = jwt.verify(token.split('Bearer ')[1], app.get('secret'));
+            const bearerToken = token.split('Bearer ')[1];
+            const user: object | string = jwt.verify(bearerToken, app.get('secret'));
 
             req.user = user;
+            req.token = bearerToken;
 
             return next();
         } catch (error) {

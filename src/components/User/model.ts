@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import * as mongodb from '@/config/db/mongodb';
-import * as sql from '@/config/db/sql';
+// import * as sql from '@/config/db/sql';
 import * as crypto from 'crypto';
 import { Document, Schema } from 'mongoose';
 import { NextFunction } from 'express';
@@ -10,8 +10,8 @@ import { NextFunction } from 'express';
  * @interface IUserRequest
  */
 export interface IUserRequest {
-    id: string;
-    email: string;
+    uuid: string;
+    username: string;
 }
 
 /**
@@ -20,88 +20,47 @@ export interface IUserRequest {
  * @extends {Document}
  */
 export interface IUserModel extends Document {
-    email: string;
-    password: string;
-    passwordResetToken: string;
-    passwordResetExpires: Date;
+    user: any;
+    uuid: string;
+    username: string;
+    staffPassword: string;
 
-    facebook: string;
-    tokens: AuthToken[];
+    titan: {
+        email: String,
+        token: String
+    },
 
-    profile: {
-        name: string;
-        gender: string;
-        location: string;
-        website: string;
-        picture: string;
-    };
     comparePassword: (password: string) => Promise<boolean>;
     gravatar: (size: number) => string;
 }
 
-export type AuthToken = {
-    accessToken: string;
-    kind: string;
-};
-
-/**
- * @swagger
- * components:
- *  schemas:
- *    UserSchema:
- *      required:
- *        - email
- *        - name
- *      properties:
- *        id:
- *          type: string
- *        name:
- *          type: string
- *        email:
- *          type: string
- *        password:
- *          type: string
- *        passwordResetToken:
- *          type: string
- *        passwordResetExpires:
- *          type: string
- *          format: date
- *        tokens:
- *          type: array
- *    Users:
- *      type: array
- *      items:
- *        $ref: '#/components/schemas/UserSchema'
- */
 const UserSchema: Schema = new Schema(
     {
-        email: {
-            type: String,
-            unique: true,
-            trim: true,
+        uuid: String,
+        username: String,
+        titan: {
+            email: String,
+            token: String
         },
-        password: String,
-        passwordResetToken: String,
-        passwordResetExpires: Date,
-        tokens: Array,
+        staffPassword: String
     },
     {
-        collection: 'users',
+        collection: 'players',
         versionKey: false,
     }
 ).pre('save', async function (next: NextFunction): Promise<void> {
     const user: any = this; // tslint:disable-line
 
-    if (!user.isModified('password')) {
+    if (!user.isModified('staffPassword')) {
         return next();
     }
 
     try {
         const salt: string = await bcrypt.genSalt(10);
 
-        const hash: string = await bcrypt.hash(user.password, salt);
+        const hash: string = await bcrypt.hash(user.staffPassword, salt);
 
-        user.password = hash;
+        user.staffPassword = hash;
         next();
     } catch (error) {
         return next(error);
@@ -113,7 +72,7 @@ const UserSchema: Schema = new Schema(
  */
 UserSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
     try {
-        const match: boolean = await bcrypt.compare(candidatePassword, this.password);
+        const match: boolean = await bcrypt.compare(candidatePassword, this.staffPassword);
 
         return match;
     } catch (error) {

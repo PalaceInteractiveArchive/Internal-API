@@ -8,67 +8,52 @@ import { IAuthService } from './interface';
  * @implements {IAuthService}
  */
 const AuthService: IAuthService = {
-    /**
-     * @param {IUserModel} body
-     * @returns {Promise <IUserModel>}
-     * @memberof AuthService
-     */
-    async createUser(body: IUserModel): Promise<IUserModel> {
-        try {
-            const validate: Joi.ValidationResult = AuthValidation.createUser(body);
 
-            if (validate.error) {
-                throw new Error(validate.error.message);
-            }
-
-            const user: IUserModel = new UserModel({
-                email: body.email,
-                password: body.password,
-            });
-
-            const query: IUserModel = await UserModel.findOne({
-                email: body.email,
-            });
-
-            if (query) {
-                throw new Error('This email already exists');
-            }
-
-            const saved: IUserModel = await user.save();
-
-            return saved;
-        } catch (error) {
-            throw new Error(error);
-        }
-    },
-    /**
-     * @param {IUserModel} body
-     * @returns {Promise <IUserModel>}
-     * @memberof AuthService
-     */
     async getUser(body: IUserModel): Promise<IUserModel> {
         try {
-            const validate: Joi.ValidationResult = AuthValidation.getUser(body);
+            const validate: Joi.ValidationResult = AuthValidation.getUserForLogin(body);
 
             if (validate.error) {
                 throw new Error(validate.error.message);
             }
 
             const user: IUserModel = await UserModel.findOne({
-                email: body.email,
-            });
+                username: body.username,
+            }, { uuid: 1, username: 1, staffPassword: 1 });
 
-            const isMatched: boolean = user && (await user.comparePassword(body.password));
+            const isMatched: boolean = user && (await user.comparePassword(body.staffPassword));
 
             if (isMatched) {
                 return user;
             }
 
-            throw new Error('Invalid password or email');
+            throw new Error('Invalid username/password combination');
         } catch (error) {
             throw new Error(error);
         }
     },
+
+    // async getUserByUUID(body: IUserModel): Promise<IUserModel> {
+    //     try {
+    //         const validate: Joi.ValidationResult = AuthValidation.getUserByUUID(body);
+
+    //         if (validate.error) {
+    //             throw new Error(validate.error.message);
+    //         }
+
+    //         const user: IUserModel = await UserModel.findOne({
+    //             uuid: body.uuid,
+    //         }, { username: 1, staffPassword: 1 });
+            
+    //         if (user) {
+    //             return user;
+    //         }
+
+    //         throw new Error('Invalid UUID');
+    //     } catch (error) {
+    //         throw new Error(error);
+    //     }
+    // }
 };
 
 export default AuthService;

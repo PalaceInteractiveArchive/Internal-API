@@ -21,15 +21,10 @@ const UserService: IUserService = {
         }
     },
 
-    /**
-     * @param {string} id
-     * @returns {Promise < IUserModel >}
-     * @memberof UserService
-     */
-    async findOne(id: string): Promise<IUserModel> {
+    async findOne(uuid: string): Promise<IUserModel> {
         try {
             const validate: Joi.ValidationResult = UserValidation.getUser({
-                id,
+                uuid
             });
 
             if (validate.error) {
@@ -38,10 +33,10 @@ const UserService: IUserService = {
 
             return await UserModel.findOne(
                 {
-                    _id: Types.ObjectId(id),
+                    uuid,
                 },
                 {
-                    password: 0,
+                    titan: 1
                 }
             );
         } catch (error) {
