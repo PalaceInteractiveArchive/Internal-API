@@ -1,13 +1,13 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "TypeScript Express API",
+    "title": "Palace Internal API",
     "version": "1.0.0",
-    "description": "TypeScript, Express, JWT Auth, Mongoose"
+    "description": "Titan, Bungees, AudioServer, Core"
   },
   "servers": [
     {
-      "url": "http://localhost:3000"
+      "url": "https://internal-api.palace.network"
     }
   ],
   "paths": {
