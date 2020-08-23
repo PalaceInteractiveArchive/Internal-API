@@ -88,8 +88,6 @@ export async function user(req: RequestWithUser, res: Response, next: NextFuncti
             return;
         }
 
-        console.log(user);
-
         const data = {
             uuid: user.uuid,
             username: user.username,
