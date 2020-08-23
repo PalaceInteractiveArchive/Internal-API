@@ -23,8 +23,10 @@ export interface IUserModel extends Document {
     user: any;
     uuid: string;
     username: string;
-    staffPassword: string;
+    rank: string;
+    tags: [string];
 
+    staffPassword: string;
     titan: {
         email: String,
         token: String
@@ -38,11 +40,14 @@ const UserSchema: Schema = new Schema(
     {
         uuid: String,
         username: String,
+        rank: String,
+        tags: [String],
+        
+        staffPassword: String,
         titan: {
             email: String,
             token: String
-        },
-        staffPassword: String
+        }
     },
     {
         collection: 'players',

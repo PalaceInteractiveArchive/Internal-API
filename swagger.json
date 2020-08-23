@@ -129,22 +129,14 @@
             "description": "return authenticated user",
             "content": {
               "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/UserSchema"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "invalid user",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
+                "example": {
+                  "success": true,
+                  "user": {
+                    "uuid": "9ab3b4c4-71d8-47c9-9e7d-adf040c53d2b",
+                    "username": "Legobuilder0813",
+                    "rank": "director",
+                    "rank_tags": []
+                  }
                 }
               }
             }

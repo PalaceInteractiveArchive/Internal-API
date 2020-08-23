@@ -1,9 +1,7 @@
 import * as express from 'express';
 import * as http from 'http';
-import * as jwtConfig from '@/config/middleware/jwtAuth';
 import * as swaggerUi from 'swagger-ui-express';
 import AuthRouter from './AuthRouter';
-import UserRouter from './UserRouter';
 
 type NextFunction = express.NextFunction;
 type Request = express.Request;
@@ -28,13 +26,13 @@ try {
 export function init(app: express.Application): void {
     const router: express.Router = express.Router();
 
-    /**
-     * @description
-     *  Forwards any requests to the /v1/users URI to our UserRouter
-     *  Also, check if user authenticated
-     * @constructs
-     */
-    app.use('/v1/users', jwtConfig.isAuthenticated, UserRouter);
+    // /**
+    //  * @description
+    //  *  Forwards any requests to the /v1/users URI to our UserRouter
+    //  *  Also, check if user authenticated
+    //  * @constructs
+    //  */
+    // app.use('/v1/users', jwtConfig.isAuthenticated, UserRouter);
 
     /**
      * @description Forwards any requests to the /auth URI to our AuthRouter

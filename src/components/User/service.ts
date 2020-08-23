@@ -21,7 +21,7 @@ const UserService: IUserService = {
         }
     },
 
-    async findOne(uuid: string): Promise<IUserModel> {
+    async findOne(uuid: string, projection?: object): Promise<IUserModel> {
         try {
             const validate: Joi.ValidationResult = UserValidation.getUser({
                 uuid
@@ -31,13 +31,14 @@ const UserService: IUserService = {
                 throw new Error(validate.error.message);
             }
 
+            if (projection === undefined) {
+                projection = { titan: 1 };
+            }
+
             return await UserModel.findOne(
                 {
                     uuid,
-                },
-                {
-                    titan: 1
-                }
+                }, projection
             );
         } catch (error) {
             throw new Error(error.message);

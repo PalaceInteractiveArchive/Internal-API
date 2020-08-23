@@ -34,7 +34,7 @@ export async function login(req: Request, res: Response, next: NextFunction): Pr
                 Authorization: token,
             })
             .send({
-                message: 'Login Success!',
+                success: true
             });
     } catch (error) {
         if (error.code === 500) {
@@ -42,6 +42,7 @@ export async function login(req: Request, res: Response, next: NextFunction): Pr
         }
         res.status(HttpStatus.BAD_REQUEST)
             .send({
+                success: false,
                 message: error.message,
             });
     }
@@ -52,10 +53,7 @@ export async function logout(req: RequestWithUser, res: Response, next: NextFunc
         const user: IUserModel = await UserService.findOne(req.user.uuid);
 
         if (user.titan.token !== req.token) {
-            res.status(HttpStatus.UNAUTHORIZED)
-                .send({
-                    message: 'Invalid authorization!',
-                });
+            res.status(HttpStatus.UNAUTHORIZED).send({ success: false, message: 'Invalid token!' });
             return;
         }
 
@@ -65,7 +63,7 @@ export async function logout(req: RequestWithUser, res: Response, next: NextFunc
 
         res.status(HttpStatus.OK)
             .send({
-                message: 'Logout Success!',
+                success: true
             });
     } catch (error) {
         if (error.code === 500) {
@@ -73,7 +71,45 @@ export async function logout(req: RequestWithUser, res: Response, next: NextFunc
         }
         res.status(HttpStatus.BAD_REQUEST)
             .send({
+                success: false,
                 message: error.message,
+            });
+    }
+}
+
+export async function user(req: RequestWithUser, res: Response, next: NextFunction): Promise<void> {
+    try {
+        const user: IUserModel = await UserService.findOne(req.user.uuid, {
+            uuid: 1, username: 1, rank: 1, tags: 1, titan: 1
+        });
+
+        if (user.titan === undefined || user.titan.token !== req.token) {
+            res.status(HttpStatus.UNAUTHORIZED).send({ success: false, message: 'Invalid token!' });
+            return;
+        }
+
+        console.log(user);
+
+        const data = {
+            uuid: user.uuid,
+            username: user.username,
+            rank: user.rank,
+            rank_tags: user.tags
+        }
+
+        res.status(HttpStatus.OK)
+            .send({
+                success: true,
+                user: data
+            });
+    } catch (error) {
+        if (error.code === 500) {
+            return next(new HttpError(error.message.status, error.message));
+        }
+        res.status(HttpStatus.BAD_REQUEST)
+            .send({
+                success: false,
+                message: error.message
             });
     }
 }
