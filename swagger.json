@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/auth/login": {
+    "/titan/auth/login": {
       "post": {
         "description": "Login user to application",
         "tags": [
@@ -64,7 +64,7 @@
         }
       }
     },
-    "/auth/logout": {
+    "/titan/auth/logout": {
       "post": {
         "description": "Logout from application",
         "tags": [
@@ -113,7 +113,7 @@
         }
       }
     },
-    "/auth/user": {
+    "/titan/auth/user": {
       "get": {
         "description": "Get authenticated user",
         "tags": [
