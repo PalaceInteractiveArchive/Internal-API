@@ -1,10 +1,10 @@
 import * as HttpStatus from 'http-status-codes';
 import * as jwt from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
-import { IUserModel, IUserRequest } from '@/components/User/model';
+import { IUserModel, IUserRequest } from '@/components/Titan/User/model';
 import HttpError from '@/config/error';
 import AuthService from './service';
-import UserService from '@/components/User/service';
+import UserService from '@/components/Titan/User/service';
 import app from '@/config/server/server';
 
 interface RequestWithUser extends Request {

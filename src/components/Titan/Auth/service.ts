@@ -1,6 +1,6 @@
 import * as Joi from 'joi';
 import AuthValidation from './validation';
-import UserModel, { IUserModel } from '@/components/User/model';
+import UserModel, { IUserModel } from '@/components/Titan/User/model';
 import { IAuthService } from './interface';
 
 /**

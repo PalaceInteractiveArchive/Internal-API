@@ -1,7 +1,8 @@
 import * as express from 'express';
 import * as http from 'http';
 import * as swaggerUi from 'swagger-ui-express';
-import AuthRouter from './AuthRouter';
+import TitanRouter from './Titan';
+import MinecraftRouter from './Minecraft';
 
 type NextFunction = express.NextFunction;
 type Request = express.Request;
@@ -35,10 +36,16 @@ export function init(app: express.Application): void {
     // app.use('/v1/users', jwtConfig.isAuthenticated, UserRouter);
 
     /**
-     * @description Forwards any requests to the /auth URI to our AuthRouter
+     * @description Forwards any requests to the /titan URI to our TitanRouter
      * @constructs
      */
-    app.use('/auth', AuthRouter);
+    app.use('/titan', TitanRouter);
+
+    /**
+     * @description Forwards any requests to the /minecraft URI to our MinecraftRouter
+     * @constructs
+     */
+    app.use('/minecraft', MinecraftRouter);
 
     /**
      * @description

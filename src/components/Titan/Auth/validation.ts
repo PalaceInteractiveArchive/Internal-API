@@ -1,6 +1,6 @@
 import * as Joi from 'joi';
 import Validation from '@/components/validation';
-import { IUserModel } from '@/components/User/model';
+import { IUserModel } from '@/components/Titan/User/model';
 
 /**
  * @export

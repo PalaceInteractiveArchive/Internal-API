@@ -15,7 +15,7 @@
       "post": {
         "description": "Login user to application",
         "tags": [
-          "auth"
+          "titan-auth"
         ],
         "requestBody": {
           "description": "login body",
@@ -68,7 +68,7 @@
       "post": {
         "description": "Logout from application",
         "tags": [
-          "auth"
+          "titan-auth"
         ],
         "security": [
           {
@@ -117,7 +117,7 @@
       "get": {
         "description": "Get authenticated user",
         "tags": [
-          "auth"
+          "titan-auth"
         ],
         "security": [
           {
@@ -144,11 +144,52 @@
         }
       }
     },
-    "/users/{uuid}": {
+    "/minecraft/packs/list": {
       "get": {
-        "description": "Get user by UUID",
+        "description": "Get all configured resource packs",
         "tags": [
-          "users"
+          "minecraft-packs"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "returns array of packs",
+            "content": {
+              "application/json": {
+                "example": {
+                  "packs": [
+                    {
+                      "name": "WDW",
+                      "versions": [
+                        {
+                          "id": 340,
+                          "url": "https://packs.palace.network/?p=wdw_1_12",
+                          "hash": "a52009079f83673ee85202a172aed1712da96a84"
+                        },
+                        {
+                          "id": 404,
+                          "url": "https://packs.palace.network/?p=wdw_1_13",
+                          "hash": "b43115b846853bb65b08e200cfe560f7a2188d4d"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/minecraft/packs/get": {
+      "get": {
+        "description": "Get all configured resource packs",
+        "tags": [
+          "minecraft-packs"
         ],
         "security": [
           {
@@ -157,10 +198,18 @@
         ],
         "parameters": [
           {
-            "in": "path",
-            "name": "uuid",
-            "description": "the user's UUID",
+            "in": "query",
+            "name": "name",
+            "description": "the name of the pack",
             "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "version",
+            "description": "the version of the pack",
             "schema": {
               "type": "string"
             }
@@ -168,13 +217,25 @@
         ],
         "responses": {
           "200": {
-            "description": "return user by UUID",
+            "description": "returns array of packs",
             "content": {
               "application/json": {
-                "schema": {
-                  "oneOf": [
+                "example": {
+                  "packs": [
                     {
-                      "$ref": "#/components/schemas/UserSchema"
+                      "name": "WDW",
+                      "versions": [
+                        {
+                          "id": 340,
+                          "url": "https://packs.palace.network/?p=wdw_1_12",
+                          "hash": "a52009079f83673ee85202a172aed1712da96a84"
+                        },
+                        {
+                          "id": 404,
+                          "url": "https://packs.palace.network/?p=wdw_1_13",
+                          "hash": "b43115b846853bb65b08e200cfe560f7a2188d4d"
+                        }
+                      ]
                     }
                   ]
                 }

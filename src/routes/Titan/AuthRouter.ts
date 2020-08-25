@@ -9,9 +9,9 @@ const router: Router = Router();
 
 router.post('/login', AuthComponent.login);
 
-router.post('/logout', jwtConfig.isAuthenticated, AuthComponent.logout);
+router.post('/logout', jwtConfig.isUserAuthenticated, AuthComponent.logout);
 
-router.get('/user', jwtConfig.isAuthenticated, AuthComponent.user);
+router.get('/user', jwtConfig.isUserAuthenticated, AuthComponent.user);
 
 /**
  * @export {express.Router}
