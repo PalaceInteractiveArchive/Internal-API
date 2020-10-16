@@ -3,6 +3,7 @@ import * as mongodb from '@/config/db/mongodb';
 // import * as sql from '@/config/db/sql';
 import * as crypto from 'crypto';
 import { Document, Schema } from 'mongoose';
+const mongoose = require('mongoose');
 import { NextFunction } from 'express';
 
 /**
@@ -102,5 +103,17 @@ UserSchema.methods.gravatar = function (size: number): string {
 
     return `https://gravatar.com/avatar/${md5}?s=${size}&d=retro`;
 };
+
+/*
+OAuth Mongo Schema
+*/
+const mongoUserSchema = new mongoose.Schema({
+    id: Number,
+    name: String,
+    pgroup: Number,
+    avatar: String
+});
+
+export const mongoUser = mongodb.db.model('User', mongoUserSchema, 'titan_users');
 
 export default mongodb.db.model<IUserModel>('UserModel', UserSchema);
