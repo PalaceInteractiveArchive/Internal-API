@@ -5,7 +5,7 @@ import HttpError from '@/config/error';
 import UserService from '@/components/Titan/User/service';
 import config from '@/config/env';
 import Axios from 'axios';
-
+//var _ = require('lodash');
 
 interface RequestWithUser extends Request {
     user: IUserRequest;
@@ -48,34 +48,34 @@ interface RequestWithUser extends Request {
 //     }
 // }
 
-export async function logout(req: RequestWithUser, res: Response, next: NextFunction): Promise<void> {
-    try {
-        const user: IUserModel = await UserService.findOne(req.user.uuid);
+// export async function logout(req: RequestWithUser, res: Response, next: NextFunction): Promise<void> {
+//     try {
+//         const user: IUserModel = await UserService.findOne(req.user.uuid);
 
-        if (user.titan.token !== req.token) {
-            res.status(HttpStatus.UNAUTHORIZED).send({ success: false, message: 'Invalid token!' });
-            return;
-        }
+//         if (user.titan.token !== req.token) {
+//             res.status(HttpStatus.UNAUTHORIZED).send({ success: false, message: 'Invalid token!' });
+//             return;
+//         }
 
-        user.titan.token = null;
+//         user.titan.token = null;
 
-        user.save();
+//         user.save();
 
-        res.status(HttpStatus.OK)
-            .send({
-                success: true
-            });
-    } catch (error) {
-        if (error.code === 500) {
-            return next(new HttpError(error.message.status, error.message));
-        }
-        res.status(HttpStatus.BAD_REQUEST)
-            .send({
-                success: false,
-                message: error.message,
-            });
-    }
-}
+//         res.status(HttpStatus.OK)
+//             .send({
+//                 success: true
+//             });
+//     } catch (error) {
+//         if (error.code === 500) {
+//             return next(new HttpError(error.message.status, error.message));
+//         }
+//         res.status(HttpStatus.BAD_REQUEST)
+//             .send({
+//                 success: false,
+//                 message: error.message,
+//             });
+//     }
+// }
 
 export async function user(req: RequestWithUser, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -112,9 +112,44 @@ export async function user(req: RequestWithUser, res: Response, next: NextFuncti
     }
 }
 
+export async function verify(req: RequestWithUser, res: Response, next: NextFunction): Promise<void> {
+    //console.log(req.body)
+    Axios({
+        method: 'GET',
+        url: 'https://forums.palace.network/api/core/me',
+        headers: {
+            authorization: `Bearer ${req.body.accessToken}`
+        }
+    })
+    .then(function (res2: any) {
+        var user = {
+            id: res2.data.id,
+            name: res2.data.name,
+            pgroup: res2.data.primaryGroup.id,
+            avatar: res2.data.photoUrl,
+            sgroups: res2.data.secondaryGroups
+        }
+        if (user.pgroup === req.body.user.pgroup) {
+            if (config.oauth.allowedGroups.includes(user.pgroup)) {
+                res.send(true);
+            } else {
+                // they got in, but are not in the right group - kick them out
+                res.send(false)
+            }
+        } else {
+            // user has been updated on IPB or they tampered with the cookie - kick them out
+            res.send(false);
+        }
+    })
+    .catch(function (err) {
+        res.send(false);
+        console.log(err);
+    });
+}
+
 export async function redirect_uri(req: Request, res: Response, next: NextFunction): Promise<void> {
 
-    console.log(req.query.code)
+    //console.log(req.query.code)
 
     var params = new URLSearchParams();
     params.append('grant_type', 'authorization_code');
@@ -140,7 +175,7 @@ export async function redirect_uri(req: Request, res: Response, next: NextFuncti
             }
         })
         .then(function (res2: any) {
-            console.log(res2.data);
+            //console.log(res2.data);
             var user = {
                 id: res2.data.id,
                 name: res2.data.name,
@@ -155,13 +190,13 @@ export async function redirect_uri(req: Request, res: Response, next: NextFuncti
                 groupAllowed = true;
             }
 
-            config.oauth.allowedGroups.forEach(e => {
-                for (let i = 0; i < user.sgroups.length; i++) {
-                    if (user.sgroups[i].id == e) {
-                        groupAllowed = true;
-                    }
-                }
-            });
+            // config.oauth.allowedGroups.forEach(e => {
+            //     for (let i = 0; i < user.sgroups.length; i++) {
+            //         if (user.sgroups[i].id == e) {
+            //             groupAllowed = true;
+            //         }
+            //     }
+            // });
 
             switch (groupAllowed) {
                 case true:
@@ -174,17 +209,19 @@ export async function redirect_uri(req: Request, res: Response, next: NextFuncti
                             return console.error(err)
                             res.send()
                         } else {
-                            res.send('yes')
+                            res.send(`<script>window.opener.postMessage({status: "success", accessToken: "${response.data.access_token}", user: ${JSON.stringify(user)}, otherStuff: ${JSON.stringify(res2.data)}},'*');</script><h1>You can close this page</h1>`)
                         }
                     })
                     break;
-            
                 default:
-                    res.redirect('https://titan.palace.network/login/?failed')
+                    res.redirect(`<script>window.opener.postMessage({status: "failed"},'*');</script>`)
                     break;
             }
 
             
+        })
+        .catch(function (err) {
+            console.error(err)
         })
     })
     .catch(function (error: any) {

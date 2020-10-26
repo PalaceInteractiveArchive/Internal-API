@@ -1,4 +1,5 @@
 import AuthRouter from "./AuthRouter";
+import StatsRouter from "./StatsRouter";
 import { Router } from 'express';
 
 /**
@@ -7,6 +8,8 @@ import { Router } from 'express';
 const router: Router = Router();
 
 router.use('/auth', AuthRouter);
+
+router.use('/stats', StatsRouter);
 
 /**
  * @export {express.Router}

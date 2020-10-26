@@ -114,6 +114,41 @@ const mongoUserSchema = new mongoose.Schema({
     avatar: String
 });
 
+/*
+Players Schema
+*/
+const mongoPlayerSchema = new mongoose.Schema({
+    uuid: String,
+    username: String,
+    rank: String,
+    onlineTime: String,
+    forums: {member_id: Number} 
+});
+
+/*
+Helpme Schema
+*/
+const mongoHelpmeSchema = new mongoose.Schema({
+    requesting: String,
+    helping: String,
+    time: Number
+});
+
+/*
+Friend Schema
+*/
+const mongoFriendSchema = new mongoose.Schema({
+    sending: String,
+    recieving: String
+});
+
+export const mongoPlayer = mongodb.db.model('Player', mongoPlayerSchema, 'players');
+
+export const mongoHelpme = mongodb.db.model('help_request', mongoHelpmeSchema, 'help_requests');
+
 export const mongoUser = mongodb.db.model('User', mongoUserSchema, 'titan_users');
+
+export const mongoFriend = mongodb.db.model('Friend', mongoFriendSchema, 'friends');
+
 
 export default mongodb.db.model<IUserModel>('UserModel', UserSchema);
