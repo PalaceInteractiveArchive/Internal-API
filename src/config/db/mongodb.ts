@@ -5,6 +5,7 @@ import Logger from '@/utils/Logger';
 const connectOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
     useCreateIndex: true,
     auth: {
         user: config.mongodb.username,
