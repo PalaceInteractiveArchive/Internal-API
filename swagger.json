@@ -144,6 +144,33 @@
         }
       }
     },
+    "/minecraft/server/online": {
+      "get": {
+        "description": "Get number of players online",
+        "tags": [
+          "minecraft-server"
+        ],
+        "responses": {
+          "200": {
+            "description": "returns current player count",
+            "content": {
+              "application/json": {
+                "example": {
+                  "server_is_online": {
+                    "online": true,
+                    "players": 100,
+                    "maxPlayers": 2000
+                  },
+                  "server_is_offline": {
+                    "online": false
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/minecraft/packs/list": {
       "get": {
         "description": "Get all configured resource packs",
