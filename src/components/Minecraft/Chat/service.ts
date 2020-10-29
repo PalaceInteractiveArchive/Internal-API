@@ -16,7 +16,6 @@ const ChatService: IChatService = {
 
     linkCheck(message: string): string[] {
         var matches = message.match(linkRegex);
-        console.log("Matches: " + matches);
         if (matches === undefined || matches == null || matches.length == 0) {
             if (message.indexOf(' . ') == -1) {
                 return null;

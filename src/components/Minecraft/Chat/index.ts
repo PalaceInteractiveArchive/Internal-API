@@ -19,10 +19,10 @@ export async function analyze(req: Request, res: Response, next: NextFunction): 
     var rank: Rank = Rank.fromString(req.body.rank);
     var message: string = req.body.message;
 
-    console.log(uuidStringify(uuid))
-    console.log(rank)
-    console.log(req.body.message)
-    console.log(req.body.server)
+    // console.log(uuidStringify(uuid))
+    // console.log(rank)
+    // console.log(req.body.message)
+    // console.log(req.body.server)
 
     if (rank >= 12) {
         res.status(HttpStatus.OK).send({ success: true, uuid: uuidStringify(uuid), okay: true, message: req.body.message });
