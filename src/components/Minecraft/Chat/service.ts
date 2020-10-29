@@ -1,5 +1,18 @@
 import { IChatService } from "./interface";
 
+/* Swear Check */
+const filterMappings = new Map();
+filterMappings.set('.', '');
+filterMappings.set('-', '');
+filterMappings.set(',', '');
+filterMappings.set('/', '');
+filterMappings.set('_', '');
+filterMappings.set(';', '');
+filterMappings.set('()', 'o');
+filterMappings.set('0', 'o');
+filterMappings.set('@', 'a');
+filterMappings.set('$', 's');
+
 /* Link Check */
 const linkRegex = new RegExp('([a-zA-Z]+[://]+)?([a-zA-Z0-9\-]+(\\.|\\(dot\\)|\\(\\)|\\*))+([a-zA-Z]{2,18})(\\/[a-zA-Z0-9\\/.,?=&_-]+)?', 'g');
 const domainRegex = new RegExp('([a-zA-Z-]{1,63})(\\.|\\(dot\\)|\\(\\)|\\*)([a-zA-Z-]{1,63})(\\/[a-zA-Z\\.]*)?$');
@@ -14,7 +27,22 @@ const ChatService: IChatService = {
     // ['filter type', 'offending text']
 
     swearCheck(message: string): string[] {
-        // return ['inappropriate content', ''];
+        var strippedMessage = "";
+        for (var i = 0; i < message.length; i++) {
+            var char = message.charAt(i);
+            if (char == '.' || char == '-' || char == ',' || char == '/' || char == '_' || char == ';') continue;
+            else if (char == '0') char = 'o';
+            else if (char == '@') char = 'a';
+            else if (char == '$') char = 's';
+            else if (char == '(' && message.charAt(i + 1) == ')') {
+                char = 'o';
+                i++;
+            } else {
+                strippedMessage += char;
+            }
+        }
+        console.log(char + " " + i);
+        console.log(strippedMessage);
         return null;
     },
 
@@ -57,8 +85,12 @@ const ChatService: IChatService = {
         return ['link sharing', str];
     },
 
-    // Your message was blocked by our chat filter for "inappropriate content". Please review our "chat guidelines" to make sure you are familiar with what we allow, and don't allow, in chat.
-    // You have been temporarily muted for 30 seconds. If your message was incorrectly blocked, a staff member will remove the mute.
+    /*
+    
+    Your message was blocked by our chat filter for "inappropriate content". Please review our "chat guidelines" to make sure you are familiar with what we allow, and don't allow, in chat.
+    You have been temporarily muted for 30 seconds. If your message was incorrectly blocked, a staff member will remove the mute.
+
+    */
 
     characterCheck(message: string): string[] {
         message = message.toLowerCase();

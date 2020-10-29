@@ -272,27 +272,24 @@
         },
         "responses": {
           "200": {
-            "description": "returns array of packs",
+            "description": "response of analysis",
             "content": {
               "application/json": {
                 "example": {
-                  "packs": [
-                    {
-                      "name": "WDW",
-                      "versions": [
-                        {
-                          "id": 340,
-                          "url": "https://packs.palace.network/?p=wdw_1_12",
-                          "hash": "a52009079f83673ee85202a172aed1712da96a84"
-                        },
-                        {
-                          "id": 404,
-                          "url": "https://packs.palace.network/?p=wdw_1_13",
-                          "hash": "b43115b846853bb65b08e200cfe560f7a2188d4d"
-                        }
-                      ]
-                    }
-                  ]
+                  "valid_message": {
+                    "success": true,
+                    "uuid": "9ab3b4c4-71d8-47c9-9e7d-adf040c53d2b",
+                    "message": "This is the original message sent",
+                    "okay": true
+                  },
+                  "invalid_message": {
+                    "success": true,
+                    "uuid": "9ab3b4c4-71d8-47c9-9e7d-adf040c53d2b",
+                    "message": "This is the original message sent",
+                    "okay": false,
+                    "filter_caught": "link sharing",
+                    "offending_text": "www.google.com"
+                  }
                 }
               }
             }
