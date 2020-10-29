@@ -32,21 +32,21 @@ export async function analyze(req: Request, res: Response, next: NextFunction): 
         if (swear != null) {
             var filter: string = swear[0];
             var offendingText: string = swear[1];
-            res.status(HttpStatus.OK).send({ success: true, uuid: uuidStringify(uuid), okay: false, player_response: filter, staff_response: offendingText });
+            res.status(HttpStatus.OK).send({ success: true, uuid: uuidStringify(uuid), okay: false, filter_caught: filter, offending_text: offendingText });
             return;
         }
         var link = ChatService.linkCheck(message);
         if (link != null) {
             var filter: string = link[0];
             var offendingText: string = link[1];
-            res.status(HttpStatus.OK).send({ success: true, uuid: uuidStringify(uuid), okay: false, player_response: filter, staff_response: offendingText });
+            res.status(HttpStatus.OK).send({ success: true, uuid: uuidStringify(uuid), okay: false, filter_caught: filter, offending_text: offendingText });
             return;
         }
         var character = ChatService.characterCheck(message);
         if (character != null) {
             var filter: string = character[0];
             var offendingText: string = character[1];
-            res.status(HttpStatus.OK).send({ success: true, uuid: uuidStringify(uuid), okay: false, player_response: filter, staff_response: offendingText });
+            res.status(HttpStatus.OK).send({ success: true, uuid: uuidStringify(uuid), okay: false, filter_caught: filter, offending_text: offendingText });
             return;
         }
         res.status(HttpStatus.OK).send({ success: true, uuid: uuidStringify(uuid), okay: true, message: req.body.message });
