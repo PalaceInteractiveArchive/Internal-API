@@ -296,6 +296,43 @@
           }
         }
       }
+    },
+    "/minecraft/chat/log": {
+      "post": {
+        "description": "Log a chat message",
+        "tags": [
+          "minecraft-chat"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "chat body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "uuid": "9ab3b4c4-71d8-47c9-9e7d-adf040c53d2b",
+                "message": "Hello world!"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response body",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

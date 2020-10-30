@@ -8,6 +8,7 @@ import { parse as uuidParse, stringify as uuidStringify } from 'uuid';
 // import config from '@/config/env';
 // import Axios from 'axios';
 import ChatService from '@/components/Minecraft/Chat/service';
+import * as mysql from '../../../config/db/sql';
 
 export async function analyze(req: Request, res: Response, next: NextFunction): Promise<void> {
     if (req.body === undefined || req.body.uuid === undefined || req.body.rank === undefined
@@ -18,11 +19,6 @@ export async function analyze(req: Request, res: Response, next: NextFunction): 
     var uuid = uuidParse(req.body.uuid);
     var rank: Rank = Rank.fromString(req.body.rank);
     var message: string = req.body.message;
-
-    // console.log(uuidStringify(uuid))
-    // console.log(rank)
-    // console.log(req.body.message)
-    // console.log(req.body.server)
 
     if (rank >= 12) {
         res.status(HttpStatus.OK).send({ success: true, uuid: uuidStringify(uuid), okay: true, message: req.body.message });
@@ -54,6 +50,10 @@ export async function analyze(req: Request, res: Response, next: NextFunction): 
 }
 
 export async function log(req: Request, res: Response, next: NextFunction): Promise<void> {
-    // const number = await mongoPlayer.countDocuments();
-    // res.send(number.toString())
+    if (req.body === undefined || req.body.uuid === undefined || req.body.message === undefined) {
+        res.status(HttpStatus.BAD_REQUEST).send({ success: false, message: 'Invalid request body!' });
+        return;
+    }
+    mysql.log(req.body.uuid, req.body.message);
+    res.status(HttpStatus.OK).send({ success: true });
 }

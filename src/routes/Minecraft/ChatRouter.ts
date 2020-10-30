@@ -9,7 +9,7 @@ const router: Router = Router();
 
 router.post('/analyze', jwtConfig.isServiceAuthenticated, ChatComponent.analyze);
 
-router.get('/log', jwtConfig.isServiceAuthenticated, ChatComponent.log);
+router.post('/log', jwtConfig.isServiceAuthenticated, ChatComponent.log);
 
 /**
  * @export {express.Router}
