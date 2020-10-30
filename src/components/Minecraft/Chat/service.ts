@@ -1,17 +1,31 @@
 import { IChatService } from "./interface";
+import * as fs from 'fs';
+import * as rd from 'readline';
 
 /* Swear Check */
-const filterMappings = new Map();
-filterMappings.set('.', '');
-filterMappings.set('-', '');
-filterMappings.set(',', '');
-filterMappings.set('/', '');
-filterMappings.set('_', '');
-filterMappings.set(';', '');
-filterMappings.set('()', 'o');
-filterMappings.set('0', 'o');
-filterMappings.set('@', 'a');
-filterMappings.set('$', 's');
+const swearList: string[] = [];
+const spacesList: string[] = [];
+const specificList: string[] = [];
+
+const swearReader = rd.createInterface(fs.createReadStream('swears.txt'));
+var checking = "";
+swearReader.on("line", (line: string) => {
+    if (line == 'spaces:') {
+        checking = 'spaces';
+    } else if (line == 'specific:') {
+        checking = 'specific';
+    } else if (line == 'swears:') {
+        checking = 'swears';
+    } else {
+        if (checking == 'spaces') {
+            spacesList.push(line);
+        } else if (checking == 'specific') {
+            specificList.push(line);
+        } else if (checking == 'swears') {
+            swearList.push(line);
+        }
+    }
+});
 
 /* Link Check */
 const linkRegex = new RegExp('([a-zA-Z]+[://]+)?([a-zA-Z0-9\-]+(\\.|\\(dot\\)|\\(\\)|\\*))+([a-zA-Z]{2,18})(\\/[a-zA-Z0-9\\/.,?=&_-]+)?', 'g');
@@ -27,6 +41,7 @@ const ChatService: IChatService = {
     // ['filter type', 'offending text']
 
     swearCheck(message: string): string[] {
+        message = message.toLowerCase();
         var strippedMessage = "";
         for (var i = 0; i < message.length; i++) {
             var char = message.charAt(i);
@@ -37,12 +52,44 @@ const ChatService: IChatService = {
             else if (char == '(' && message.charAt(i + 1) == ')') {
                 char = 'o';
                 i++;
-            } else {
-                strippedMessage += char;
+            }
+            strippedMessage += char;
+        }
+        var containsSwear: string = null;
+        for (var i = 0; i < specificList.length; i++) {
+            var word = specificList[i];
+            if (strippedMessage.includes(word)) {
+                containsSwear = word;
+                break;
             }
         }
-        console.log(char + " " + i);
-        console.log(strippedMessage);
+        if (containsSwear == null) {
+            for (var i = 0; i < spacesList.length; i++) {
+                var word = spacesList[i];
+                if (strippedMessage == word || strippedMessage.startsWith(word + " ") || strippedMessage.endsWith(" " + word) || strippedMessage.includes(" " + word + " ")) {
+                    containsSwear = word;
+                    break;
+                }
+            }
+            if (containsSwear == null) {
+                var noSpaces = "";
+                for (var i = 0; i < strippedMessage.length; i++) {
+                    var char = strippedMessage.charAt(i);
+                    if (char == ' ') continue;
+                    noSpaces += char;
+                }
+                for (var i = 0; i < swearList.length; i++) {
+                    var word = swearList[i];
+                    if (noSpaces.includes(word)) {
+                        containsSwear = word;
+                        break;
+                    }
+                }
+            }
+        }
+        if (containsSwear != null) {
+            return ['inappropriate content', containsSwear];
+        }
         return null;
     },
 
