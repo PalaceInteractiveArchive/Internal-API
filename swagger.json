@@ -271,6 +271,95 @@
           }
         }
       }
+    },
+    "/minecraft/chat/analyze": {
+      "post": {
+        "description": "Analyze a chat message for inappropriate text, links, etc.",
+        "tags": [
+          "minecraft-chat"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "chat body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "uuid": "9ab3b4c4-71d8-47c9-9e7d-adf040c53d2b",
+                "rank": "owner",
+                "message": "Hello world!",
+                "server": "Creative"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response of analysis",
+            "content": {
+              "application/json": {
+                "example": {
+                  "valid_message": {
+                    "success": true,
+                    "uuid": "9ab3b4c4-71d8-47c9-9e7d-adf040c53d2b",
+                    "message": "This is the original message sent",
+                    "okay": true
+                  },
+                  "invalid_message": {
+                    "success": true,
+                    "uuid": "9ab3b4c4-71d8-47c9-9e7d-adf040c53d2b",
+                    "message": "This is the original message sent",
+                    "okay": false,
+                    "filter_caught": "link sharing",
+                    "offending_text": "www.google.com"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/minecraft/chat/log": {
+      "post": {
+        "description": "Log a chat message",
+        "tags": [
+          "minecraft-chat"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "chat body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "uuid": "9ab3b4c4-71d8-47c9-9e7d-adf040c53d2b",
+                "message": "Hello world!"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "response body",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
