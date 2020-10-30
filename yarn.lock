@@ -2403,6 +2403,11 @@ marked@^0.8.2:
   resolved "https://registry.yarnpkg.com/marked/-/marked-0.8.2.tgz#4faad28d26ede351a7a1aaa5fec67915c869e355"
   integrity sha512-EGwzEeCcLniFX51DhTpmTom+dSA/MG/OBUDjnWtHbEnjAH180VzUeAw+oE4+Zv+CoYBWyRlYOTR0N8SO9R1PVw==
 
+mcping-js@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/mcping-js/-/mcping-js-1.5.0.tgz#96e45c6cbd708f91b18cb925abe6528686dc7374"
+  integrity sha512-CoXbpbSqE4OtJupU2lvzoKFrGerH0AoyY9YoQ98EKUOhtxfLQa+f+DFqWYUaZ451Scru1gJm/+w6d3IKJhMGvQ==
+
 mdurl@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/mdurl/-/mdurl-1.0.1.tgz#fe85b2ec75a59037f2adfec100fd6c601761152e"
