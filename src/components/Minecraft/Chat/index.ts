@@ -2,11 +2,6 @@ import * as HttpStatus from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
 import { Rank } from '../../../handlers/rank';
 import { parse as uuidParse, stringify as uuidStringify } from 'uuid';
-// import { mongoUser, mongoPlayer, mongoHelpme, mongoFriend } from '@/components/Titan/User/model';
-// import HttpError from '@/config/error';
-// import UserService from '@/components/Titan/User/service';
-// import config from '@/config/env';
-// import Axios from 'axios';
 import ChatService from '@/components/Minecraft/Chat/service';
 import * as mysql from '../../../config/db/sql';
 
@@ -54,6 +49,11 @@ export async function log(req: Request, res: Response, next: NextFunction): Prom
         res.status(HttpStatus.BAD_REQUEST).send({ success: false, message: 'Invalid request body!' });
         return;
     }
-    mysql.log(req.body.uuid, req.body.message);
+    var chatEntry = { uuid: req.body.uuid, message: req.body.message, time: Date.now() };
+    mysql.pool.query('INSERT INTO chat SET ?', chatEntry, function (error:any, results:any, fields:any) {
+        if (error != null) {
+            console.log(error);
+        }
+    });
     res.status(HttpStatus.OK).send({ success: true });
 }
