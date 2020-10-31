@@ -288,6 +288,7 @@
           "required": true,
           "content": {
             "application/json": {
+              "schema": {},
               "example": {
                 "uuid": "9ab3b4c4-71d8-47c9-9e7d-adf040c53d2b",
                 "rank": "owner",
@@ -340,6 +341,7 @@
           "required": true,
           "content": {
             "application/json": {
+              "schema": {},
               "example": {
                 "uuid": "9ab3b4c4-71d8-47c9-9e7d-adf040c53d2b",
                 "message": "Hello world!"
@@ -354,6 +356,105 @@
               "application/json": {
                 "example": {
                   "success": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discord/link": {
+      "post": {
+        "description": "Link a Discord account to an MC account",
+        "tags": [
+          "discord"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "request body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {},
+              "example": {
+                "minecraftUUID": "9ab3b4c4-71d8-47c9-9e7d-adf040c53d2b",
+                "discordTag": "Legobuilder0813#6604"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success, along with linking pin and ms until that pin expires",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true,
+                  "pin": "382956",
+                  "expires": 300000
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "already linked MC",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "message": "Your Minecraft account is already linked to a Discord account!"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discord/unlink": {
+      "post": {
+        "description": "Unlink a Discord account from a Minecraft account",
+        "tags": [
+          "discord"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "request body",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {},
+              "example": {
+                "minecraftUUID": "9ab3b4c4-71d8-47c9-9e7d-adf040c53d2b"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Discord account unlinked successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No linked Discord account",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "message": "There is no Discord account linked to this Minecraft account!"
                 }
               }
             }
