@@ -1,8 +1,11 @@
-// import * as Joi from 'joi';
 import DiscordModel, { IDiscordModel, LinkingInfo } from './model';
 import { IDiscordService } from './interface';
 import * as mysql from '../../config/db/sql';
+import {Client, User} from 'discord.js';
 import util = require('util');
+
+const discordClient: Client = new Client({fetchAllMembers: true});
+discordClient.login(process.env.DISCORD_BOT_TOKEN);
 
 const pool = mysql.pool;
 const query = util.promisify(pool.query).bind(pool);
@@ -12,6 +15,27 @@ const query = util.promisify(pool.query).bind(pool);
  * @implements {IDiscordModelService}
  */
 const DiscordService: IDiscordService = {
+    async findDiscordUserByTag(discordTag: string): Promise<User> {
+        var returningUser = null;
+        await discordClient.guilds.fetch('582659944793243798').then(guild => {
+            if (guild.available) {
+                guild.members.fetch().then(users => {
+                    const arr = users.array();
+                    for (var i = 0; i < arr.length; i++) {
+                        var user = arr[i];
+                        if (user !== undefined && user != null) {
+                            const tag = user.user.username + "#" + user.user.discriminator;
+                            if (tag == discordTag) {
+                                returningUser = user.user;
+                                break;
+                            }
+                        }
+                    }
+                });
+            }
+        })
+        return returningUser;
+    },
     async findUserByUUID(uuid: string): Promise<IDiscordModel> {
         try {
             return await DiscordModel.findOne({ uuid }, { _id: 0 });

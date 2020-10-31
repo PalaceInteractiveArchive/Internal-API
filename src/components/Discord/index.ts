@@ -2,7 +2,7 @@ import * as HttpStatus from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
 import { IDiscordModel, LinkingInfo } from '@/components/Discord/model';
 import { parse as uuidParse, stringify as uuidStringify } from 'uuid';
-import * as mysql from '../../config/db/sql';
+// import * as mysql from '../../config/db/sql';
 import DiscordService from './service';
 
 export async function link(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -18,7 +18,7 @@ export async function link(req: Request, res: Response, next: NextFunction): Pro
 
     var user: IDiscordModel = await DiscordService.findUserByUUID(uuid);
     if (user == null) {
-        res.status(HttpStatus.FORBIDDEN).send({ success: false, message: 'Could not find user with provided UUID' });
+        res.status(HttpStatus.BAD_REQUEST).send({ success: false, message: 'Could not find user with provided UUID' });
         return;
     }
 
@@ -30,11 +30,12 @@ export async function link(req: Request, res: Response, next: NextFunction): Pro
 
     var discordTag = req.body.discordTag;
     // TODO use Discord API for this
-    var discordId = discordTag;
-    if (discordId == null) {
-        res.status(HttpStatus.FORBIDDEN).send({ success: false, message: 'Could not find user with provided Discord Tag' });
+    var discordUser = await DiscordService.findDiscordUserByTag(discordTag);
+    if (discordUser == null) {
+        res.status(HttpStatus.BAD_REQUEST).send({ success: false, message: 'Could not find user with provided Discord Tag' });
         return;
     }
+    var discordId = discordUser.id;
 
     var linkInfo = await DiscordService.findLinkInfoByDiscordID(discordId);
     if (linkInfo != null) {
@@ -62,7 +63,7 @@ export async function link(req: Request, res: Response, next: NextFunction): Pro
         minecraftUUID: uuid, discordId, pin, expires: expiresTime
     }
     await DiscordService.storeLinkInfo(info);
-    
+
     res.status(HttpStatus.OK).send({ success: true, pin, expires });
 
     // 1. check if MC account with the provided UUID has joined our server
@@ -80,15 +81,15 @@ export async function link(req: Request, res: Response, next: NextFunction): Pro
 }
 
 export async function unlink(req: Request, res: Response, next: NextFunction): Promise<void> {
-    if (req.body === undefined || req.body.uuid === undefined || req.body.message === undefined) {
-        res.status(HttpStatus.BAD_REQUEST).send({ success: false, message: 'Invalid request body!' });
-        return;
-    }
-    var chatEntry = { uuid: req.body.uuid, message: req.body.message, time: Date.now() };
-    mysql.pool.query('INSERT INTO chat SET ?', chatEntry, function (error: any, results: any, fields: any) {
-        if (error != null) {
-            console.log(error);
-        }
-    });
+    // if (req.body === undefined || req.body.uuid === undefined || req.body.message === undefined) {
+    //     res.status(HttpStatus.BAD_REQUEST).send({ success: false, message: 'Invalid request body!' });
+    //     return;
+    // }
+    // var chatEntry = { uuid: req.body.uuid, message: req.body.message, time: Date.now() };
+    // mysql.pool.query('INSERT INTO chat SET ?', chatEntry, function (error: any, results: any, fields: any) {
+    //     if (error != null) {
+    //         console.log(error);
+    //     }
+    // });
     res.status(HttpStatus.OK).send({ success: true });
 }

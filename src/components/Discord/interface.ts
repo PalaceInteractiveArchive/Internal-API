@@ -1,3 +1,4 @@
+import { User } from 'discord.js';
 import { IDiscordModel, LinkingInfo } from './model';
 
 /**
@@ -5,6 +6,8 @@ import { IDiscordModel, LinkingInfo } from './model';
  * @interface IDiscordService
  */
 export interface IDiscordService {
+    findDiscordUserByTag(discordTag: string): Promise<User>;
+    
     /**
      * @param {string} code
      * @returns {Promise<IDiscordModel>}
