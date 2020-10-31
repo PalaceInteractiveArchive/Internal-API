@@ -382,7 +382,8 @@
               "schema": {},
               "example": {
                 "minecraftUUID": "9ab3b4c4-71d8-47c9-9e7d-adf040c53d2b",
-                "discordTag": "Legobuilder0813#6604"
+                "discordTag": "Legobuilder0813#6604",
+                "acceptChannelLink": "https://discord.com/channels/245348983990386688/722112393202761818"
               }
             }
           }
