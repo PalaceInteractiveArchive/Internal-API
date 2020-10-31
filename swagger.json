@@ -462,6 +462,54 @@
           }
         }
       }
+    },
+    "/discord/sync": {
+      "post": {
+        "description": "Sync a Discord account's display role with the linked Minecraft account's rank",
+        "tags": [
+          "discord"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "request body",
+          "required": true,
+          "content":{
+            "application/json": {
+              "schema": {},
+              "example": {
+                "minecraftUUID": "9ab3b4c4-71d8-47c9-9e7d-adf040c53d2b"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sync successful",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Sync unsuccessful (several causes)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "success": false,
+                  "message": "This Minecraft account doesn't have a linked Discord account"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
