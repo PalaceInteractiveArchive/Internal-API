@@ -6,7 +6,6 @@ import { mongoUser, mongoPlayer, mongoHelpme, mongoFriend } from '@/components/T
 // import config from '@/config/env';
 import Axios from 'axios';
 
-
 export async function titanUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
     const number = await mongoUser.countDocuments();
     res.send(number.toString())
@@ -30,10 +29,6 @@ export async function findUserFriends(req: Request, res: Response, next: NextFun
 }
 
 export async function getUserDetails(req: Request, response: Response, next: NextFunction): Promise<void> {
-    if (!req.body.accesstoken) {
-        response.send({});
-    }
-
     await mongoPlayer.find({username: req.params.user}).lean().exec(function (err, results) {
         if (!results.length) {
             response.send({})

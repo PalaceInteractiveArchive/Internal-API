@@ -214,7 +214,7 @@ export async function redirect_uri(req: Request, res: Response, next: NextFuncti
                     })
                     break;
                 default:
-                    res.send(`<script>window.opener.postMessage({status: "failed"},'*');</script><h1>You can close this page</h1>`)
+                    res.redirect(`<script>window.opener.postMessage({status: "failed"},'*');</script>`)
                     break;
             }
 
