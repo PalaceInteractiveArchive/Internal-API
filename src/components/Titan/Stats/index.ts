@@ -44,7 +44,7 @@ export async function getUserDetails(req: Request, response: Response, next: Nex
                 method: 'GET',
                 url: `https://forums.palace.network/api/core/members/${resJson.forums.member_id}`,
                 headers: {
-                    authorization: `Bearer ${req.params.accesstoken}`
+                    authorization: `Bearer ${req.body.accesstoken}`
                 }
             })
             .then(function (res: any) {

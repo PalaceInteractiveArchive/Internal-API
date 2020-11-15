@@ -121,8 +121,12 @@ const mongoPlayerSchema = new mongoose.Schema({
     uuid: String,
     username: String,
     rank: String,
-    onlineTime: String,
-    forums: {member_id: Number} 
+    onlineTime: Number,
+    forums: {member_id: Number},
+    warnings: {reason: String, time: Number, source: String},
+    kicks: {reason: String, time: Number, source: String},
+    mutes: {created: Number, expires: Number, reason: String, active: Boolean, source: String},
+    bans: {created: Number, expires: Number, permanent: Boolean, source: String, active: Boolean}
 });
 
 /*
@@ -142,6 +146,13 @@ const mongoFriendSchema = new mongoose.Schema({
     recieving: String
 });
 
+/* Chat Schema */
+const mongoChatSchema = new mongoose.Schema({
+    uuid: String,
+    message: String,
+    time: Number
+})
+
 export const mongoPlayer = mongodb.db.model('Player', mongoPlayerSchema, 'players');
 
 export const mongoHelpme = mongodb.db.model('help_request', mongoHelpmeSchema, 'help_requests');
@@ -150,5 +161,6 @@ export const mongoUser = mongodb.db.model('User', mongoUserSchema, 'titan_users'
 
 export const mongoFriend = mongodb.db.model('Friend', mongoFriendSchema, 'friends');
 
+export const mongoChat = mongodb.db.model('Chat', mongoChatSchema, 'chat');
 
 export default mongodb.db.model<IUserModel>('UserModel', UserSchema);

@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { IUserModel, IUserRequest, mongoUser } from '@/components/Titan/User/model';
 import HttpError from '@/config/error';
 import UserService from '@/components/Titan/User/service';
-import config from '@/config/env';
+import config from '@/config/titan';
 import Axios from 'axios';
 //var _ = require('lodash');
 
@@ -130,7 +130,7 @@ export async function verify(req: RequestWithUser, res: Response, next: NextFunc
             sgroups: res2.data.secondaryGroups
         }
         if (user.pgroup === req.body.user.pgroup) {
-            if (config.oauth.allowedGroups.includes(user.pgroup)) {
+            if (config.allowedGroups.includes(user.pgroup)) {
                 res.send(true);
             } else {
                 // they got in, but are not in the right group - kick them out
@@ -186,7 +186,7 @@ export async function redirect_uri(req: Request, res: Response, next: NextFuncti
 
             let groupAllowed = false;
 
-            if (config.oauth.allowedGroups.includes(user.pgroup)) {
+            if (config.allowedGroups.includes(user.pgroup)) {
                 groupAllowed = true;
             }
 
