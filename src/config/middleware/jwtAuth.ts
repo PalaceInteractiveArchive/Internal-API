@@ -4,6 +4,8 @@ import { NextFunction, Request, Response } from 'express';
 import app from '@/config/server/server';
 import HttpError from '@/config/error';
 import * as http from 'http';
+import * as fs from 'fs';
+import * as rd from 'readline';
 
 interface RequestWithUser extends Request {
     user: object | string;
@@ -15,20 +17,13 @@ interface RequestWithService extends Request {
     token: string;
 }
 
-/**
- *
- * @param {RequestWithUser} req
- * @param {Response} res
- * @param {NextFunction} next
- * @returns {void}
- * @swagger
- *  components:
- *   securitySchemes:
- *     bearerAuth:
- *       type: http
- *       scheme: bearer
- *       bearerFormat: JWT
- */
+const apiKeys: string[] = [];
+
+const keyReader = rd.createInterface(fs.createReadStream('keys.txt'));
+keyReader.on("line", (line: string) => {
+    apiKeys.push(line);
+});
+
 export function isUserAuthenticated(req: RequestWithUser, res: Response, next: NextFunction): void {
     const token: any = req.headers.authorization;
 
@@ -50,18 +45,11 @@ export function isUserAuthenticated(req: RequestWithUser, res: Response, next: N
 }
 
 export function isServiceAuthenticated(req: RequestWithService, res: Response, next: NextFunction): void {
-    const token: any = req.headers.authorization;
-
-    if (token && token.indexOf('Bearer ') !== -1) {
-        try {
-            const bearerToken = token.split('Bearer ')[1];
-            const service: object | string = jwt.verify(bearerToken, app.get('secret'));
-
-            req.service = service;
-            req.token = bearerToken;
-
+    if (req.headers['service-api-key'] !== undefined) {
+        const bearerToken: any = req.headers['service-api-key'];
+        if (apiKeys.includes(bearerToken)) {
             return next();
-        } catch (error) {
+        } else {
             return next(new HttpError(HttpStatus.UNAUTHORIZED, http.STATUS_CODES[HttpStatus.UNAUTHORIZED]));
         }
     }

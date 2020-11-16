@@ -1,3 +1,5 @@
 import * as PacksComponent from './Packs';
+import * as ChatComponent from './Chat';
+import * as ServerComponent from './Server';
 
-export { PacksComponent };
+export { PacksComponent, ChatComponent, ServerComponent };
