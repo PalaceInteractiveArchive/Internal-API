@@ -70,7 +70,7 @@ export async function getChatHistory(req: Request, response: Response, next: Nex
         skipAmount = 50 * req.body.page;
     }
 
-    await mongoChat.find({uuid: req.body.uuid}).sort({time: -1}).limit(50).skip(skipAmount).lean().exec(function (err, results) {
+    await mongoChat.find({uuid: req.body.uuid}).sort({_id: -1}).limit(50).skip(skipAmount).lean().exec(function (err, results) {
         response.send({chat: results})
     })
 
