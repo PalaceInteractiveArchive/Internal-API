@@ -5,16 +5,34 @@ import { mongoUser, mongoPlayer, mongoHelpme, mongoFriend } from '@/components/T
 // import UserService from '@/components/Titan/User/service';
 // import config from '@/config/env';
 import Axios from 'axios';
+import * as userGroups from '@/config/titan/groups'
 
-
-export async function titanUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function titanUsersNumber(req: Request, res: Response, next: NextFunction): Promise<void> {
     const number = await mongoUser.countDocuments();
     res.send(number.toString())
+}
+
+export async function titanUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const all = await mongoUser.find({});
+    res.send(all);
 }
 
 export async function totalPlayers(req: Request, res: Response, next: NextFunction): Promise<void> {
     const number = await mongoPlayer.countDocuments();
     res.send(number.toString())
+}
+
+export async function onlineStaff(req: Request, res: Response, next: NextFunction): Promise<void> {
+    Axios({
+        method: 'GET',
+        url: 'http://64.31.23.218:7319/'
+    })
+    .then(function (res2: any) {
+        res.send(res2.data.attachments)
+    })
+    .catch(err => {
+        console.log(err)
+    })
 }
 
 export async function totalHelps(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -57,4 +75,8 @@ export async function getUserDetails(req: Request, response: Response, next: Nex
             });
         }
     })
+}
+
+export async function getGroupInfo(req: Request, response: Response, next: NextFunction): Promise<void> {
+    response.send(userGroups.groups);
 }

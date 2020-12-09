@@ -5,6 +5,7 @@ import * as crypto from 'crypto';
 import { Document, Schema } from 'mongoose';
 const mongoose = require('mongoose');
 import { NextFunction } from 'express';
+import { IAlertModel, ITitanUser } from '@/components/Titan/Alerts/interface'
 
 /**
  * @export
@@ -36,6 +37,7 @@ export interface IUserModel extends Document {
     comparePassword: (password: string) => Promise<boolean>;
     gravatar: (size: number) => string;
 }
+
 
 const UserSchema: Schema = new Schema(
     {
@@ -111,7 +113,9 @@ const mongoUserSchema = new mongoose.Schema({
     id: Number,
     name: String,
     pgroup: Number,
-    avatar: String
+    avatar: String,
+    allowedRoutes: [Number],
+    readAlerts: [String]
 });
 
 /*
@@ -153,14 +157,22 @@ const mongoChatSchema = new mongoose.Schema({
     time: Number
 })
 
+/* Alert Schema */
+const mongoAlertSchema = new mongoose.Schema({
+    id: String,
+    message: String
+})
+
 export const mongoPlayer = mongodb.db.model('Player', mongoPlayerSchema, 'players');
 
 export const mongoHelpme = mongodb.db.model('help_request', mongoHelpmeSchema, 'help_requests');
 
-export const mongoUser = mongodb.db.model('User', mongoUserSchema, 'titan_users');
+export const mongoUser = mongodb.db.model<ITitanUser>('User', mongoUserSchema, 'titan_users');
 
 export const mongoFriend = mongodb.db.model('Friend', mongoFriendSchema, 'friends');
 
 export const mongoChat = mongodb.db.model('Chat', mongoChatSchema, 'chat');
+
+export const mongoAlert = mongodb.db.model<IAlertModel>('Alert', mongoAlertSchema, 'titan_alerts');
 
 export default mongodb.db.model<IUserModel>('UserModel', UserSchema);

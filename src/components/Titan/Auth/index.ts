@@ -1,3 +1,4 @@
+require('dotenv').config()
 import * as HttpStatus from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
 import { IUserModel, IUserRequest, mongoUser } from '@/components/Titan/User/model';
@@ -5,77 +6,11 @@ import HttpError from '@/config/error';
 import UserService from '@/components/Titan/User/service';
 import config from '@/config/titan';
 import Axios from 'axios';
-//var _ = require('lodash');
 
 interface RequestWithUser extends Request {
     user: IUserRequest;
     token: string;
 }
-
-/**
- * @export
- * @param {Request} req
- * @param {Response} res
- * @param {NextFunction} next
- * @returns {Promise < void >}
- */
-// export async function login(req: Request, res: Response, next: NextFunction): Promise<void> {
-//     try {
-//         const user: IUserModel = await AuthService.getUser(req.body);
-
-//         const token: string = jwt.sign({ uuid: user.uuid, username: user.username }, app.get('secret'));
-
-//         user.titan.token = token;
-
-//         user.save();
-
-//         res.status(HttpStatus.OK)
-//             .header({
-//                 Authorization: token,
-//             })
-//             .send({
-//                 success: true
-//             });
-//     } catch (error) {
-//         if (error.code === 500) {
-//             return next(new HttpError(error.message.status, error.message));
-//         }
-//         res.status(HttpStatus.BAD_REQUEST)
-//             .send({
-//                 success: false,
-//                 message: error.message,
-//             });
-//     }
-// }
-
-// export async function logout(req: RequestWithUser, res: Response, next: NextFunction): Promise<void> {
-//     try {
-//         const user: IUserModel = await UserService.findOne(req.user.uuid);
-
-//         if (user.titan.token !== req.token) {
-//             res.status(HttpStatus.UNAUTHORIZED).send({ success: false, message: 'Invalid token!' });
-//             return;
-//         }
-
-//         user.titan.token = null;
-
-//         user.save();
-
-//         res.status(HttpStatus.OK)
-//             .send({
-//                 success: true
-//             });
-//     } catch (error) {
-//         if (error.code === 500) {
-//             return next(new HttpError(error.message.status, error.message));
-//         }
-//         res.status(HttpStatus.BAD_REQUEST)
-//             .send({
-//                 success: false,
-//                 message: error.message,
-//             });
-//     }
-// }
 
 export async function user(req: RequestWithUser, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -175,7 +110,6 @@ export async function redirect_uri(req: Request, res: Response, next: NextFuncti
             }
         })
         .then(function (res2: any) {
-            //console.log(res2.data);
             var user = {
                 id: res2.data.id,
                 name: res2.data.name,
@@ -183,35 +117,38 @@ export async function redirect_uri(req: Request, res: Response, next: NextFuncti
                 avatar: res2.data.photoUrl,
                 sgroups: res2.data.secondaryGroups
             }
-
             let groupAllowed = false;
 
             if (config.allowedGroups.includes(user.pgroup)) {
                 groupAllowed = true;
             }
 
-            // config.oauth.allowedGroups.forEach(e => {
-            //     for (let i = 0; i < user.sgroups.length; i++) {
-            //         if (user.sgroups[i].id == e) {
-            //             groupAllowed = true;
-            //         }
-            //     }
-            // });
 
             switch (groupAllowed) {
                 case true:
-                    const queryUser = new mongoUser(user);
-                    var queryData = queryUser.toObject();
-                    delete queryData._id;
-
-                    mongoUser.findOneAndUpdate({id: user.id}, queryData, {upsert:true}, function(err) {
-                        if (err) {
-                            return console.error(err)
-                            res.send()
-                        } else {
-                            res.send(`<script>window.opener.postMessage({status: "success", accessToken: "${response.data.access_token}", user: ${JSON.stringify(user)}, otherStuff: ${JSON.stringify(res2.data)}},'*');</script><h1>You can close this page</h1>`)
-                        }
+                    let sgroups: number[] = []
+                    Axios({
+                        method: 'get',
+                        url: `https://forums.palace.network/api/core/members/${user.id}?key=${process.env.ipbApi}`
                     })
+                    .then(function (res1: any) {
+                        let secondarys = res1.data.secondaryGroups;
+                        secondarys.forEach((el: any) => {
+                            sgroups.push(el.id)
+                        });
+                        const queryUser = new mongoUser(user);
+                        var queryData = queryUser.toObject();
+                        delete queryData._id;
+
+                        mongoUser.findOneAndUpdate({id: user.id}, { 'id': user.id, 'avatar': user.avatar, 'name': user.name, 'pgroup': user.pgroup}, {upsert:true}, function(err, result) {
+                            if (err) {
+                                return console.error(err)
+                            } else {
+                                res.send(`<script>window.opener.postMessage({status: "success", accessToken: "${response.data.access_token}", user: ${JSON.stringify(result)}, otherStuff: ${JSON.stringify(res2.data)}, sGroups: ${JSON.stringify(sgroups)}},'*');</script><h1>You can close this page</h1>`)
+                            }
+                        })
+                    })
+                    
                     break;
                 default:
                     res.send(`<script>window.opener.postMessage({status: "failed"},'*');</script><h1>You can close this page</h1>`)

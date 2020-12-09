@@ -1,6 +1,6 @@
 import { SupportComponent } from '@/components';
 import { Router } from 'express';
-import { managerOAuthCheck } from '@/config/titan/authAccess';
+import { managerOAuthCheck, requiresOAuth } from '@/config/titan/authAccess';
 
 
 /**
@@ -8,7 +8,7 @@ import { managerOAuthCheck } from '@/config/titan/authAccess';
  */
 const router: Router = Router();
 
-router.post('/submitAbsence', managerOAuthCheck, SupportComponent.submitAbsence);
+router.post('/submitAbsence', requiresOAuth, SupportComponent.submitAbsence);
 
 router.post('/currentAbsence', managerOAuthCheck, SupportComponent.getNewAbsences);
 
