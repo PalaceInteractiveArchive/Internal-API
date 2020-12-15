@@ -73,6 +73,7 @@ export const managerOAuthCheck = function(req: Request, res: Response, next: Nex
                         return next(new HttpError(HttpStatus.UNAUTHORIZED, http.STATUS_CODES[HttpStatus.UNAUTHORIZED]));
                     }
                     sGroups.data.secondaryGroups.forEach((element: any) => {
+                        console.log(element);
                         if (config.sensitiveGroups.includes(element.id)) {
                             return next();
                         }
