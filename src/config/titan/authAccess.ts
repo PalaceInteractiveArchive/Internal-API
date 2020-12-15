@@ -72,22 +72,24 @@ export const managerOAuthCheck = function(req: Request, res: Response, next: Nex
                     if (err) {
                         return next(new HttpError(HttpStatus.UNAUTHORIZED, http.STATUS_CODES[HttpStatus.UNAUTHORIZED]));
                     }
+                    var sGroupFound = false;
                     sGroups.data.secondaryGroups.forEach((element: any) => {
-                        console.log(element);
-                        if (config.sensitiveGroups.includes(element.id)) {
-                            console.log('ran next()')
+                        if (config.sensitiveGroups.includes(element.id) && !sGroupFound) {
+                            sGroupFound = true;
                             return next();
                         }
                     });
-                    if (results.toObject().allowedRoutes.includes(req.body.routeType)) {
-                        return next();
-                    } else {
-                        if (config.sensitiveGroups.includes(user.pgroup)) {
+                    if (!sGroupFound) {
+                        if (results.toObject().allowedRoutes.includes(req.body.routeType)) {
                             return next();
                         } else {
-                            // they got in, but are not in the right group - kick them out
-                            console.log('wrong group')
-                            return next(new HttpError(HttpStatus.UNAUTHORIZED, http.STATUS_CODES[HttpStatus.UNAUTHORIZED]));
+                            if (config.sensitiveGroups.includes(user.pgroup)) {
+                                return next();
+                            } else {
+                                // they got in, but are not in the right group - kick them out
+                                console.log('wrong group')
+                                return next(new HttpError(HttpStatus.UNAUTHORIZED, http.STATUS_CODES[HttpStatus.UNAUTHORIZED]));
+                            }
                         }
                     }
                 }); 
