@@ -1,6 +1,6 @@
 import { StatsComponent } from '@/components';
 import { Router } from 'express';
-import { requiresOAuth } from '@/config/titan/authAccess';
+import { requiresOAuth, managerOAuthCheck } from '@/config/titan/authAccess';
 
 
 /**
@@ -8,7 +8,9 @@ import { requiresOAuth } from '@/config/titan/authAccess';
  */
 const router: Router = Router();
 
-router.post('/titanUsers', requiresOAuth, StatsComponent.titanUsers);
+router.post('/titanUsers', requiresOAuth, StatsComponent.titanUsersNumber);
+
+router.post('/titanUserList', managerOAuthCheck, StatsComponent.titanUsers);
 
 router.post('/totalUsers', requiresOAuth, StatsComponent.totalPlayers);
 
@@ -18,6 +20,9 @@ router.post('/getFriends/:uuid', requiresOAuth, StatsComponent.findUserFriends);
 
 router.post('/getUser/:user/', requiresOAuth, StatsComponent.getUserDetails);
 
+router.post('/getGroups', requiresOAuth, StatsComponent.getGroupInfo);
+
+router.post('/onlineStaff', requiresOAuth, StatsComponent.onlineStaff);
 
 
 /**

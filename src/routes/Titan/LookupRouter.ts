@@ -1,6 +1,6 @@
 import { LookupComponent } from '@/components';
 import { Router } from 'express';
-import { requiresOAuth } from '@/config/titan/authAccess';
+import { managerOAuthCheck, requiresOAuth } from '@/config/titan/authAccess';
 
 
 /**
@@ -12,7 +12,7 @@ router.post('/general', requiresOAuth, LookupComponent.getUserDetails);
 
 router.post('/moderation', requiresOAuth, LookupComponent.getUserModlog);
 
-router.post('/chat', requiresOAuth, LookupComponent.getChatHistory);
+router.post('/chat', managerOAuthCheck, LookupComponent.getChatHistory);
 
 /**
  * @export {express.Router}

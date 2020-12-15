@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import config from '@/config/titan';
 import Axios from 'axios';
 import HttpError from '@/config/error';
+import { mongoUser } from '@/components/Titan/User/model';
 import * as http from 'http';
 
 export const requiresOAuth = function(req: Request, res: Response, next: NextFunction): void {
@@ -57,7 +58,7 @@ export const managerOAuthCheck = function(req: Request, res: Response, next: Nex
                 authorization: `Bearer ${req.body.accessToken}`
             }
         })
-        .then(function (res2: any) {
+        .then(async function (res2: any) {
             var user = {
                 id: res2.data.id,
                 name: res2.data.name,
@@ -66,13 +67,32 @@ export const managerOAuthCheck = function(req: Request, res: Response, next: Nex
                 sgroups: res2.data.secondaryGroups
             }
             if (user.pgroup === req.body.user.pgroup) {
-                if (config.sensitiveGroups.includes(user.pgroup)) {
-                    return next();
-                } else {
-                    // they got in, but are not in the right group - kick them out
-                    console.log('wrong group')
-                    return next(new HttpError(HttpStatus.UNAUTHORIZED, http.STATUS_CODES[HttpStatus.UNAUTHORIZED]));
-                }
+                let sGroups = await Axios.get(`https://forums.palace.network/api/core/members/${user.id}?key=${config.ipbApi}`);
+                await mongoUser.findOne({id: user.id}).exec(function (err, results) {
+                    if (err) {
+                        return next(new HttpError(HttpStatus.UNAUTHORIZED, http.STATUS_CODES[HttpStatus.UNAUTHORIZED]));
+                    }
+                    var sGroupFound = false;
+                    sGroups.data.secondaryGroups.forEach((element: any) => {
+                        if (config.sensitiveGroups.includes(element.id) && !sGroupFound) {
+                            sGroupFound = true;
+                            return next();
+                        }
+                    });
+                    if (!sGroupFound) {
+                        if (results.toObject().allowedRoutes.includes(req.body.routeType)) {
+                            return next();
+                        } else {
+                            if (config.sensitiveGroups.includes(user.pgroup)) {
+                                return next();
+                            } else {
+                                // they got in, but are not in the right group - kick them out
+                                console.log('wrong group')
+                                return next(new HttpError(HttpStatus.UNAUTHORIZED, http.STATUS_CODES[HttpStatus.UNAUTHORIZED]));
+                            }
+                        }
+                    }
+                }); 
             } else {
                 // user has been updated on IPB or they tampered with the cookie - kick them out
                 console.log('tampered')
