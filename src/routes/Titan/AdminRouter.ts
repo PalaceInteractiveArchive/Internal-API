@@ -1,4 +1,4 @@
-import { AdminComponent } from '@/components';
+import { AdminComponent } from '@/components/Titan';
 import { Router } from 'express';
 import { managerOAuthCheck } from '@/config/titan/authAccess';
 

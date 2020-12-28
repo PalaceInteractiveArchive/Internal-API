@@ -1,4 +1,4 @@
-import { StatsComponent } from '@/components';
+import { StatsComponent } from '@/components/Titan';
 import { Router } from 'express';
 import { requiresOAuth, managerOAuthCheck } from '@/config/titan/authAccess';
 

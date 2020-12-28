@@ -1,4 +1,4 @@
-import { LookupComponent } from '@/components';
+import { LookupComponent } from '@/components/Titan';
 import { Router } from 'express';
 import { managerOAuthCheck, requiresOAuth } from '@/config/titan/authAccess';
 

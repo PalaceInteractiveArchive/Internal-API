@@ -1,5 +1,5 @@
 // import * as jwtConfig from '@/config/middleware/jwtAuth';
-import { AuthComponent } from '@/components';
+import { AuthComponent } from '@/components/Titan';
 import { Router } from 'express';
 var cors = require('cors');
 
