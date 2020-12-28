@@ -22,7 +22,6 @@ export default async function TestTrack(req: Request, response: Response, next: 
     for (let index = 0; index < 6- totalPlayers; index++) {
         players.push('');
     }
-    console.log(players)
     players = await shuffle(players);
 
 
