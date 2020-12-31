@@ -14,6 +14,8 @@ router.post('/moderation', requiresOAuth, LookupComponent.getUserModlog);
 
 router.post('/chat', managerOAuthCheck, LookupComponent.getChatHistory);
 
+router.post('/glog', managerOAuthCheck, LookupComponent.getGuideLog);
+
 /**
  * @export {express.Router}
  */
