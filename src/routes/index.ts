@@ -3,7 +3,7 @@ import * as http from 'http';
 import * as swaggerUi from 'swagger-ui-express';
 import TitanRouter from './Titan';
 import MinecraftRouter from './Minecraft';
-import RideRouter from './RidePhoto';
+import RideRouter from './Minecraft/RidePhoto';
 
 type NextFunction = express.NextFunction;
 type Request = express.Request;
@@ -47,12 +47,6 @@ export function init(app: express.Application): void {
      * @constructs
      */
     app.use('/minecraft', MinecraftRouter);
-
-    /**
-     * @description Forwards any requests to the /minecraft URI to our MinecraftRouter
-     * @constructs
-     */
-    app.use('/ridephoto', RideRouter);
 
     /**
      * @description
