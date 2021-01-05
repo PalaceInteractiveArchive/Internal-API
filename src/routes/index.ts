@@ -3,7 +3,6 @@ import * as http from 'http';
 import * as swaggerUi from 'swagger-ui-express';
 import TitanRouter from './Titan';
 import MinecraftRouter from './Minecraft';
-import RideRouter from './Minecraft/RidePhoto';
 
 type NextFunction = express.NextFunction;
 type Request = express.Request;

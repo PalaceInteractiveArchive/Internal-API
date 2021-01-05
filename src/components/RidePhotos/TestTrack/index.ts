@@ -26,7 +26,7 @@ export default async function TestTrack(req: Request, response: Response, next: 
 
 
     var url = function(name: any, ratio: any, hr: any) {
-        return `https://tomr.dev/ridePhotos/render/3d.php?user=${name}&vr=-25&hr=${hr}&hrh=0&vrll=86&vrrl=86&vrla=30&vrra=36&displayHair=true&headOnly=false&format=png&ratio=${ratio}&aa=false&layers=true`
+        return `https://avatar.palace.network/3d.php?user=${name}&vr=-25&hr=${hr}&hrh=0&vrll=86&vrrl=86&vrla=30&vrra=36&displayHair=true&headOnly=false&format=png&ratio=${ratio}&aa=false&layers=true`
     }
     
     var downloaded = 0;

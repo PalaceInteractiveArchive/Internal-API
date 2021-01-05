@@ -7,7 +7,7 @@ const path = require('path');
 
 export default async function TestTrack(req: Request, response: Response, next: NextFunction): Promise<void> {
 
-const url = `https://tomr.dev/ridePhotos/render/3d.php?user=${req.params.playerList}&vr=-18&hr=-36&hrh=0&vrll=90&vrrl=90&vrla=30&vrra=30&displayHair=true&headOnly=false&format=png&ratio=12&aa=false&layers=true`;
+const url = `https://avatar.palace.network/3d.php?user=${req.params.playerList}&vr=-18&hr=-36&hrh=0&vrll=90&vrrl=90&vrla=30&vrra=30&displayHair=true&headOnly=false&format=png&ratio=12&aa=false&layers=true`;
 
 
 var download = function(uri: any, filename: any, callback: any){

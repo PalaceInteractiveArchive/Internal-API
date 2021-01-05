@@ -1,7 +1,7 @@
 import PacksRouter from './PacksRouter';
 import ChatRouter from './ChatRouter';
 import ServerRouter from './ServerRouter';
-import RidePhoto from "./RidePhoto/index"
+import RideRouter from "./RidePhotoRouter"
 import { Router } from 'express';
 
 /**
@@ -27,7 +27,7 @@ router.use('/server', ServerRouter);
 /**
  * @description Ridephoto endpoints
  */
-router.use('/ridephoto', RidePhoto);
+router.use('/ridephoto', RideRouter);
 
 /**
  * @export {express.Router}
