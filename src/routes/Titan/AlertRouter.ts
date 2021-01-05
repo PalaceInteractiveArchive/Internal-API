@@ -1,4 +1,4 @@
-import { AlertComponent } from '@/components';
+import { AlertComponent } from '@/components/Titan';
 import { Router } from 'express';
 import { requiresOAuth } from '@/config/titan/authAccess';
 
