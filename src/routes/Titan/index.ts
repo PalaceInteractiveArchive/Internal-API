@@ -4,7 +4,8 @@ import { Router } from 'express';
 import SupportRouter from './SupportRouter';
 import LookupRouter from './LookupRouter';
 import AdminRouter from './AdminRouter';
-import AlertRouter from './AlertRouter'
+import AlertRouter from './AlertRouter';
+import ApplicationRouter from './ApplicationRouter';
 
 /**
  * @constant {express.Router}
@@ -22,6 +23,8 @@ router.use('/lookup', LookupRouter);
 router.use('/admin', AdminRouter);
 
 router.use('/alerts', AlertRouter);
+
+router.use('/application', ApplicationRouter)
 
 /**
  * @export {express.Router}
