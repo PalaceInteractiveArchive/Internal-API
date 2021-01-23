@@ -156,3 +156,28 @@ async function shuffle(a: String[]) {
     }
     return a;
 }
+
+export async function EmptyTT(req: Request, response: Response, next: NextFunction): Promise<void> {
+    mergeImages([
+        { src: path.join(__dirname,'../../../../storage/ride/tt/background.png'), x: 0, y: 0 },
+        { src: path.join(__dirname,'../../../../storage/ride/tt/overlay-1.png'), x: 0, y: 0 },
+        { src: path.join(__dirname,'../../../../storage/ride/tt/overlay-2.png'), x: 0, y: 0 }
+    ], {
+        Canvas: Canvas,
+        Image: Image
+    })
+    .then((b64: String) => {
+        var base64Data = b64.replace(/^data:image\/png;base64,/, "");
+        fs.writeFile(path.join(__dirname,"../../../../storage/ride/tt/tt.png"), base64Data, 'base64', async function(err: any) {
+            if (err) {
+                console.log(err);
+            }
+            console.log('[RidePhotos] Sent Empty TT Pic')
+            response.sendFile(path.join(__dirname,"../../../../storage/ride/tt/tt.png"));
+            return;
+        });
+    })
+    .catch((err: any) => {
+        console.log('[RidePhotos] Error');
+    })
+}
