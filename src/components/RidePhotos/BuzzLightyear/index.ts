@@ -105,3 +105,27 @@ export default async function BuzzLightyear(req: Request, response: Response, ne
     
     createImg();
 }
+
+export async function EmptyBuzz(req: Request, response: Response, next: NextFunction): Promise<void> {
+    mergeImages([
+        { src: path.join(__dirname,'../../../../storage/ride/bz/background.png'), x: 0, y: 0 },
+        { src: path.join(__dirname,'../../../../storage/ride/bz/bz-overlay.png'), x: 0, y: 0 }
+    ], {
+        Canvas: Canvas,
+        Image: Image
+    })
+    .then((b64: String) => {
+        var base64Data = b64.replace(/^data:image\/png;base64,/, "");
+        fs.writeFile(path.join(__dirname,"../../../../storage/ride/bz/bz.png"), base64Data, 'base64', async function(err: any) {
+            if (err) {
+                console.log(err);
+            }
+            console.log('[RidePhotos] Sent Empty BZ Pic')
+            response.sendFile(path.join(__dirname,"../../../../storage/ride/bz/bz.png"));
+            return;
+        });
+    })
+    .catch((err: any) => {
+        console.log('[RidePhotos] Error');
+    })
+}

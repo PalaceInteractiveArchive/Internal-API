@@ -122,17 +122,29 @@ export default async function SpaceMountain(req: Request, response: Response, ne
     createImg();
 }
 
-/**
- * Shuffles array in place.
- * @param {Array} a items An array containing the items.
- */
-// async function shuffle(a: String[]) {
-//     var j, x, i;
-//     for (i = a.length - 1; i > 0; i--) {
-//         j = Math.floor(Math.random() * (i + 1));
-//         x = a[i];
-//         a[i] = a[j];
-//         a[j] = x;
-//     }
-//     return a;
-// }
+
+export async function EmptySM(req: Request, response: Response, next: NextFunction): Promise<void> {
+    mergeImages([
+        { src: path.join(__dirname,'../../../../storage/ride/sm/background.png'), x: 0, y: 0 },
+        { src: path.join(__dirname,'../../../../storage/ride/sm/overlay-1.png'), x: 0, y: 0 },
+        { src: path.join(__dirname,'../../../../storage/ride/sm/overlay-2.png'), x: 0, y: 0 },
+        { src: path.join(__dirname,'../../../../storage/ride/sm/overlay-3.png'), x: 0, y: 0 }
+    ], {
+        Canvas: Canvas,
+        Image: Image
+    })
+    .then((b64: String) => {
+        var base64Data = b64.replace(/^data:image\/png;base64,/, "");
+        fs.writeFile(path.join(__dirname,"../../../../storage/ride/sm/sm.png"), base64Data, 'base64', async function(err: any) {
+            if (err) {
+                console.log(err);
+            }
+            console.log('[RidePhotos] Sent Empty SM Pic')
+            response.sendFile(path.join(__dirname,"../../../../storage/ride/sm/sm.png"));
+            return;
+        });
+    })
+    .catch((err: any) => {
+        console.log('[RidePhotos] Error - rerunning ourself to see if this works.');
+    })
+}
