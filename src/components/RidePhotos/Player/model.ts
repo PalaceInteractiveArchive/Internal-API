@@ -7,7 +7,8 @@ Photo Schema
 const mongoPhotoSchema = new mongoose.Schema({
     url: String,
     players: [String],
-    info: String
+    info: String,
+    timestamp: Number
 });
 
 export const mongoPhoto = mongodb.db.model('photopass', mongoPhotoSchema, 'photopass');
