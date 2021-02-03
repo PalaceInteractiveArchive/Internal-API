@@ -22,6 +22,13 @@ const config = {
         clientId: process.env.oauthClientId,
         allowedGroups: [8, 4, 44]
     },
+    messagequeue: {
+        hostname: process.env.mqHostname,
+        port: parseInt(process.env.mqPort),
+        username: process.env.mqUsername,
+        password: process.env.mqPassword,
+        vhost: process.env.mqVhost
+    }
 }
 
 export default config;
