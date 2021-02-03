@@ -22,7 +22,8 @@ export class MessageQueue {
                 var queue = 'chat_analysis';
 
                 channel.assertQueue(queue, {
-                    durable: true
+                    durable: true,
+                    autoDelete: false
                 });
                 channel.assertExchange('proxy_direct', 'direct', {
                     durable: false
@@ -98,6 +99,9 @@ export class MessageQueue {
 
                             channel.ack(msg);
                             channel.publish('proxy_direct', packet.sendingProxy, Buffer.from(JSON.stringify(response2)));
+                        } else {
+                            console.log("Invalid packet: " + msg.content.toString());
+                            channel.ack(msg);
                         }
                     }
                 }, { noAck: false });
