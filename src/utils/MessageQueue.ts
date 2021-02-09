@@ -1,6 +1,15 @@
 import * as amqp from 'amqplib/callback_api';
 import config from '@/config/env';
 import ChatService from '@/components/Minecraft/Chat/service';
+import * as influx from '@/config/db/influx';
+
+interface KVP {
+    [key: string]: object;
+}
+
+interface KSP {
+    [key: string]: string;
+}
 
 export class MessageQueue {
 
@@ -110,7 +119,68 @@ export class MessageQueue {
                         channel.ack(msg);
                     }
                 }, { noAck: false });
-            })
+            });
+
+            connection.createChannel(function (err1: any, channel: amqp.Channel) {
+                if (err1) {
+                    throw err1;
+                }
+                var queue = 'statistics';
+
+                channel.assertQueue(queue, {
+                    durable: true,
+                    autoDelete: false
+                });
+                channel.prefetch(1);
+                console.log(' [X] Listening for statistics requests');
+
+                channel.consume(queue, function reply(msg) {
+                    try {
+                        if (msg.content) {
+                            console.log(" [x] %s", msg.content.toString());
+                            var packet = JSON.parse(msg.content.toString());
+                            if (packet.id && packet.id == 35 && packet.measurement) {
+                                var measurement = packet.measurement;
+                                var packetFields = packet.fields;
+                                var packetTags = packet.tags;
+
+                                var tags: KSP = {};
+                                var fields: KVP = {};
+
+                                for (var i = 0; i < packetFields.length; i++) {
+                                    var obj = packetFields[i];
+                                    var key = obj.key;
+                                    var value = obj.value;
+                                    fields[key] = value;
+                                }
+
+                                for (var i = 0; i < packetTags.length; i++) {
+                                    var obj = packetTags[i];
+                                    var key = obj.key;
+                                    var value = obj.value;
+                                    tags[key] = value;
+                                }
+                                
+                                influx.influx.writePoints([{
+                                    measurement,
+                                    tags,
+                                    fields
+                                }]).catch((err) => {
+                                    console.error(`Error saving data to InfluxDB! ${err.stack}`);
+                                });
+
+                                channel.ack(msg);
+                            } else {
+                                console.log("Invalid packet: " + msg.content.toString());
+                                channel.ack(msg);
+                            }
+                        }
+                    } catch (error) {
+                        console.log("Error handling message: " + error);
+                        channel.ack(msg);
+                    }
+                }, { noAck: false });
+            });
         });
     }
 }

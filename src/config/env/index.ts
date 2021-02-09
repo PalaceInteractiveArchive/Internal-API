@@ -28,6 +28,13 @@ const config = {
         username: process.env.mqUsername,
         password: process.env.mqPassword,
         vhost: process.env.mqVhost
+    },
+    influx: {
+        host: process.env.influxHost,
+        port: parseInt(process.env.influxPort),
+        username: process.env.influxUsername,
+        password: process.env.influxPassword,
+        database: process.env.influxDatabase
     }
 }
 
