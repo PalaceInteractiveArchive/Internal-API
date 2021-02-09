@@ -29,7 +29,7 @@ swearReader.on("line", (line: string) => {
 
 /* Link Check */
 const linkRegex = new RegExp('([a-zA-Z]+[://]+)?([a-zA-Z0-9\-]+(\\.|\\(dot\\)|\\(\\)|\\*))+([a-zA-Z]{2,18})(\\/[a-zA-Z0-9\\/.,?=&_-]+)?', 'g');
-const domainRegex = new RegExp('([a-zA-Z-]{1,63})(\\.|\\(dot\\)|\\(\\)|\\*)([a-zA-Z-]{1,63})(\\/[a-zA-Z\\.]*)?$');
+const domainRegex = new RegExp('([a-zA-Z-]{1,63})(\\.|\\(dot\\)|\\(\\)|\\*)([a-zA-Z-]{1,63})(\\/.*)?$');
 const allowedDomains: string[] = ['palace.network', 'thepalacemc.com', 'palnet.us'];
 
 /* Character Check */
@@ -109,7 +109,7 @@ const ChatService: IChatService = {
         var matchedDomains: string[] = [];
         matches.forEach(m => {
             var parts = m.match(domainRegex);
-            if (parts !== undefined || parts != null || parts.length >= 4) {
+            if (parts !== undefined && parts != null && parts.length >= 4) {
                 var domain = parts[1] + parts[2] + parts[3];
                 if (!allowedDomains.includes(domain)) {
                     matchedDomains.push(m);
