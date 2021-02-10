@@ -24,6 +24,7 @@ export class MessageQueue {
             if (err0) {
                 throw err0;
             }
+            connection.on("error", function(e: any) { console.log(e); setInterval(this.initializeQueueListener, 2000) });
             connection.createChannel(function (err1: any, channel: amqp.Channel) {
                 if (err1) {
                     throw err1;
