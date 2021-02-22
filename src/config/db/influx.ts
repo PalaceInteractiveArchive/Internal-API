@@ -6,5 +6,16 @@ export const influx: Influx.InfluxDB = new Influx.InfluxDB({
     port: config.influx.port,
     username: config.influx.username,
     password: config.influx.password,
-    database: config.influx.database
+    database: config.influx.database,
+    schema: [
+      {
+        measurement: 'player_count',
+        fields: {
+          count: Influx.FieldType.INTEGER
+        },
+        tags: [
+          'production'
+        ]
+      }
+    ]
 });
