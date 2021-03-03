@@ -29,11 +29,11 @@ swearReader.on("line", (line: string) => {
 
 /* Link Check */
 const linkRegex = new RegExp('([a-zA-Z]+[://]+)?([a-zA-Z0-9\-]+(\\.|\\(dot\\)|\\(\\)|\\*))+([a-zA-Z]{2,18})(\\/[a-zA-Z0-9\\/.,?=&_-]+)?', 'g');
-const domainRegex = new RegExp('([a-zA-Z-]{1,63})(\\.|\\(dot\\)|\\(\\)|\\*)([a-zA-Z-]{1,63})(\\/[a-zA-Z\\.]*)?$');
+const domainRegex = new RegExp('([a-zA-Z-]{1,63})(\\.|\\(dot\\)|\\(\\)|\\*)([a-zA-Z-]{1,63})(\\/.*)?$');
 const allowedDomains: string[] = ['palace.network', 'thepalacemc.com', 'palnet.us'];
 
 /* Character Check */
-const allowedCharacters: string[] = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "=", "_", "+", "[", "]", "{", "}", "/", "\\", "?", "|", ",", ".", "<", ">", "`", "~", ";", ":", "'", "\"", "√", "˚", "≤", "≥", "™", "£", "¢", "∞", "•", " "];
+const allowedCharacters: string[] = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "=", "_", "+", "[", "]", "{", "}", "/", "\\", "?", "|", ",", ".", "<", ">", "`", "~", ";", ":", "'", "\"", "√", "˚", "≤", "≥", "™", "£", "¢", "∞", "•", " ", "’"];
 
 const ChatService: IChatService = {
 
@@ -109,7 +109,7 @@ const ChatService: IChatService = {
         var matchedDomains: string[] = [];
         matches.forEach(m => {
             var parts = m.match(domainRegex);
-            if (parts !== undefined || parts != null || parts.length >= 4) {
+            if (parts !== undefined && parts != null && parts.length >= 4) {
                 var domain = parts[1] + parts[2] + parts[3];
                 if (!allowedDomains.includes(domain)) {
                     matchedDomains.push(m);

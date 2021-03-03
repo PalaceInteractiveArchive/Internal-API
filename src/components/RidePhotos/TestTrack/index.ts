@@ -26,7 +26,7 @@ export default async function TestTrack(req: Request, response: Response, next: 
 
 
     var url = function(name: any, ratio: any, hr: any) {
-        return `https://tomr.dev/ridePhotos/render/3d.php?user=${name}&vr=-25&hr=${hr}&hrh=0&vrll=86&vrrl=86&vrla=30&vrra=36&displayHair=true&headOnly=false&format=png&ratio=${ratio}&aa=false&layers=true`
+        return `https://avatar.palace.network/3d.php?user=${name}&vr=-25&hr=${hr}&hrh=0&vrll=86&vrrl=86&vrla=30&vrra=36&displayHair=true&headOnly=false&format=png&ratio=${ratio}&aa=false&layers=true`
     }
     
     var downloaded = 0;
@@ -155,4 +155,29 @@ async function shuffle(a: String[]) {
         a[j] = x;
     }
     return a;
+}
+
+export async function EmptyTT(req: Request, response: Response, next: NextFunction): Promise<void> {
+    mergeImages([
+        { src: path.join(__dirname,'../../../../storage/ride/tt/background.png'), x: 0, y: 0 },
+        { src: path.join(__dirname,'../../../../storage/ride/tt/overlay-1.png'), x: 0, y: 0 },
+        { src: path.join(__dirname,'../../../../storage/ride/tt/overlay-2.png'), x: 0, y: 0 }
+    ], {
+        Canvas: Canvas,
+        Image: Image
+    })
+    .then((b64: String) => {
+        var base64Data = b64.replace(/^data:image\/png;base64,/, "");
+        fs.writeFile(path.join(__dirname,"../../../../storage/ride/tt/tt.png"), base64Data, 'base64', async function(err: any) {
+            if (err) {
+                console.log(err);
+            }
+            console.log('[RidePhotos] Sent Empty TT Pic')
+            response.sendFile(path.join(__dirname,"../../../../storage/ride/tt/tt.png"));
+            return;
+        });
+    })
+    .catch((err: any) => {
+        console.log('[RidePhotos] Error');
+    })
 }

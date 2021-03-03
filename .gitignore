@@ -5,3 +5,4 @@
 *.log
 swears.txt
 keys.txt
+.DS_Store

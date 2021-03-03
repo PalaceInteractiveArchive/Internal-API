@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { checkAccess, ridePhotoGen, returnUsersRecent } from "@/components/RidePhotos"
+import { checkAccess, ridePhotoGen, returnUsersRecent, empties } from "@/components/RidePhotos"
 
 /**
  * @constant {express.Router}
@@ -7,6 +7,9 @@ import { checkAccess, ridePhotoGen, returnUsersRecent } from "@/components/RideP
 const router: Router = Router();
 
 router.get('/create/:ride/:playerList', checkAccess, ridePhotoGen);
+
+router.get('/createEmpty/:ride', checkAccess, empties);
+
 
 router.get('/player/:uuid', returnUsersRecent );
 
