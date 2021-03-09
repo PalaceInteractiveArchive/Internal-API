@@ -23,16 +23,17 @@ export async function totalPlayers(req: Request, res: Response, next: NextFuncti
 }
 
 export async function onlineStaff(req: Request, res: Response, next: NextFunction): Promise<void> {
-    Axios({
-        method: 'GET',
-        url: 'http://64.31.23.218:7319/'
-    })
-    .then(function (res2: any) {
-        res.send(res2.data.attachments)
-    })
-    .catch(err => {
-        console.log(err)
-    })
+    // Axios({
+    //     method: 'GET',
+    //     url: 'http://64.31.23.218:7319/'
+    // })
+    // .then(function (res2: any) {
+    //     res.send(res2.data.attachments)
+    // })
+    // .catch(err => {
+    //     console.log(err)
+    // })
+    res.send([])
 }
 
 export async function totalHelps(req: Request, res: Response, next: NextFunction): Promise<void> {
