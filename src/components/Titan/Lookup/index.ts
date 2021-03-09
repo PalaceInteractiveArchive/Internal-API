@@ -1,6 +1,6 @@
 //import * as HttpStatus from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
-import { mongoPlayer, mongoChat } from '@/components/Titan/User/model';
+import { mongoPlayer, mongoChat, mongoHelpme } from '@/components/Titan/User/model';
 // import HttpError from '@/config/error';
 // import UserService from '@/components/Titan/User/service';
 // import config from '@/config/env';
@@ -56,6 +56,48 @@ export async function getUserModlog(req: Request, response: Response, next: Next
 
         let sentObj = {warnings: resJson.warnings, mutes: resJson.mutes, kicks: resJson.kicks, bans: resJson.bans};
         response.send(sentObj);
+    });
+
+}
+
+export async function getGuideLog(req: Request, response: Response, next: NextFunction): Promise<void> {
+    if (!req.body.accessToken) {
+        response.send({});
+    }
+    console.log(req.body.uuid)
+    await mongoHelpme.find({helping: req.body.uuid}).exec(function (err, results) {
+        if (err) {
+            console.log(err)
+            response.send({});
+            return;
+        }
+        var requests: any[] = [];
+        results.forEach(res => {
+            var r = res.toObject();
+            if (r.time != null) {
+                requests.push(r.time);
+            }
+        });
+        var dayAgo = new Date();
+        dayAgo.setDate(dayAgo.getDate() - 1);
+
+        var weekAgo = new Date();
+        weekAgo.setDate(dayAgo.getDate() - 7);
+
+        var monthAgo = new Date();
+        monthAgo.setMonth(monthAgo.getMonth() - 1);
+
+        var dayTotal = 0, monthTotal = 0, weekTotal = 0, total = 0;
+        requests.forEach(r => {
+            if (r >= dayAgo.valueOf()) dayTotal++;
+            if (r >= weekAgo.valueOf()) weekTotal++;
+            if (r >= monthAgo.valueOf()) monthTotal++;
+            total++;
+        });
+
+        var jsonObj = {"day": dayTotal, "week": weekTotal, "month": monthTotal, "total": total}
+
+        response.send(jsonObj);
     });
 
 }

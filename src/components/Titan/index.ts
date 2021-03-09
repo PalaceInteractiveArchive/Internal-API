@@ -5,5 +5,6 @@ import * as SupportComponent from './Support';
 import * as LookupComponent from './Lookup';
 import * as AdminComponent from './Admin';
 import * as AlertComponent from './Alerts'
+import * as ApplicationComponent from './Applications'
 
-export { AuthComponent, UserComponent, StatsComponent, SupportComponent, LookupComponent, AdminComponent, AlertComponent };
+export { AuthComponent, UserComponent, StatsComponent, SupportComponent, LookupComponent, AdminComponent, AlertComponent, ApplicationComponent };

@@ -1,0 +1,20 @@
+let names = new Map();
+names.set("settler", 1);
+names.set("dweller", 1);
+names.set("noble", 1);
+names.set("majestic", 1);
+names.set("honorable", 1);
+names.set("shareholder", 1);
+names.set("specialguest", 1);
+names.set("trainee", 2);
+names.set("traineebuild", 2);
+names.set("traineetech", 2);
+names.set("mod", 3);
+names.set("builder", 3);
+names.set("technician", 3);
+names.set("media", 3);
+names.set("coordinator", 4);
+names.set("guide", 5);
+names.set("creator", 6);
+
+export default names;
