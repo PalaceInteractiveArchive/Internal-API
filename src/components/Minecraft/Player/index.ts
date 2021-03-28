@@ -1,14 +1,24 @@
-import { mongoPlayer } from '@/components/Titan/User/model';
-import { Request, Response, NextFunction } from 'express';
+import * as HttpStatus from 'http-status-codes';
+import * as http from 'http';
 
-export const getPlayer = async (req: Request, response: Response, next: NextFunction):Promise<void> => {
-    await mongoPlayer.find({username: req.params.user}).lean().exec((err, results) => {
-        if (!results.length) response.send({})
-        let temp = JSON.stringify(results[0])
-        let resJson = JSON.parse(temp)
-        let pResult = {uuid: resJson.uuid, username: resJson.username, rank: resJson.rank, onlineTime: resJson.onlineTime, tokens: resJson.tokens, balance: resJson.balance, tags: resJson.tags, server: resJson.server }
-        response.send(pResult)
-    }).catch((err) => {
-        console.error(err);
-    })
+import { NextFunction, Request, Response } from 'express';
+import HttpError from '@/config/error';
+import { mongoPlayer } from '@/components/Titan/User/model';
+
+export const getPlayer = async (req: Request, res: Response, next: NextFunction):Promise<void> => {
+
+    if (!req.headers['service-api-key']) {
+        return next(new HttpError(HttpStatus.UNAUTHORIZED, http.STATUS_CODES[HttpStatus.UNAUTHORIZED]));
+    } else {
+        await mongoPlayer.find({username: req.params.user}).lean().exec((err, results) => {
+            if (!results.length) {
+                res.send({message: 'Player Not Found!'})
+            } else {
+                let data = JSON.stringify(results[0]);
+                let parseData = JSON.parse(data);
+                let playerData = {uuid: parseData.uuid, username: parseData.username, rank: parseData.rank, onlineTime: parseData.onlineTime, tokens: parseData.tokens, balance: parseData.balance, tags: parseData.tags, server: parseData.server }
+                res.send(playerData);
+            }
+        })
+    }
 }
