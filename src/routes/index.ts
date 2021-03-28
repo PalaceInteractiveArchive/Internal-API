@@ -3,6 +3,7 @@ import * as http from 'http';
 import * as swaggerUi from 'swagger-ui-express';
 import TitanRouter from './Titan';
 import MinecraftRouter from './Minecraft';
+import DiscordRouter from './Discord'
 
 type NextFunction = express.NextFunction;
 type Request = express.Request;
@@ -46,6 +47,12 @@ export function init(app: express.Application): void {
      * @constructs
      */
     app.use('/minecraft', MinecraftRouter);
+
+    /**
+     * @description Forwards any requests to the /discord URI to our DiscordRouter
+     * @constructs
+     */
+    app.use('/discord', DiscordRouter)
 
     /**
      * @description
