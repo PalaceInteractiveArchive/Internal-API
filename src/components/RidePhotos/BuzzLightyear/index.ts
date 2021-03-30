@@ -96,8 +96,8 @@ export default async function BuzzLightyear(req: Request, response: Response, ne
                     });
                 })
                 .catch((err: any) => {
-                    console.log('[RidePhotos] Error - rerunning ourself to see if this works.');
-                    makeFile();
+                    console.log('[RidePhotos] Error - Buzz');
+                    console.log(err)
                 })
             }
           });

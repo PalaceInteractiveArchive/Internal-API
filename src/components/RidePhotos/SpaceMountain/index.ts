@@ -112,8 +112,8 @@ export default async function SpaceMountain(req: Request, response: Response, ne
                     });
                 })
                 .catch((err: any) => {
-                    console.log('[RidePhotos] Error - rerunning ourself to see if this works.');
-                    makeFile();
+                    console.log('[RidePhotos] Error - Space Mountain.');
+                    console.log(err)
                 })
             }
           });

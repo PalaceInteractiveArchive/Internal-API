@@ -96,8 +96,8 @@ export default async function HauntedMansion(req: Request, response: Response, n
                     });
                 })
                 .catch((err: any) => {
-                    console.log('[RidePhotos] Error - rerunning ourself to see if this works.');
-                    makeFile();
+                    console.log('[RidePhotos] Error - HM.');
+                    console.log(err)
                 })
             }
           });

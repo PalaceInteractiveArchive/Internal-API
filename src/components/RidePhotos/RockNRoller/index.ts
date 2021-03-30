@@ -119,8 +119,8 @@ export default async function RockNRoller(req: Request, response: Response, next
                     });
                 })
                 .catch((err: any) => {
-                    console.log('[RidePhotos] Error - rerunning ourself to see if this works.');
-                    makeFile();
+                    console.log('[RidePhotos] Error - RockNRoller');
+                    console.log(err)
                 })
             }
           });

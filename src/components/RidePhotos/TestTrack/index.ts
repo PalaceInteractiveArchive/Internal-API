@@ -132,8 +132,8 @@ export default async function TestTrack(req: Request, response: Response, next: 
                     });
                 })
                 .catch((err: any) => {
-                    console.log('[RidePhotos] Error - rerunning ourself to see if this works.');
-                    makeFile();
+                    console.log('[RidePhotos] Error - Test Track - Aborting');
+                    console.log(err);
                 })
             }
           });
