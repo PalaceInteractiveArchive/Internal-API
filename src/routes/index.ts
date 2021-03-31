@@ -52,7 +52,7 @@ export function init(app: express.Application): void {
      * @description Forwards any requests to the /discord URI to our DiscordRouter
      * @constructs
      */
-    app.use('/discord', DiscordRouter)
+    app.use('/discord', DiscordRouter);
 
     /**
      * @description
