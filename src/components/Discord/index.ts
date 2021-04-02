@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 
 
 export const Link = async (req: Request, response: Response) => {
-  const client_id = '543141358496383048';
+  // const client_id = '543141358496383048';
   const client_secret = 'RI_ubQFraTuKXPS9JFuczgZdF--4RaUX';
   const redirect_uri = 'https://dev-internal-api.palace.network/discord/verify';
 
@@ -17,7 +17,7 @@ export const Link = async (req: Request, response: Response) => {
   const config = {
     headers: {'Content-Type': 'application/x-www-form-urlencoded'}
   }
-  await Axios.post(`https://discord.com/api/oauth2/token?grant_type=authorization_code&client_id=${client_id}&client_secret=${client_secret}&code=${code}&redirect_uri=${redirect_uri}&scope=identify`, config)
+  await Axios.post(`https://discord.com/api/oauth2/token?grant_type=authorization_code&client_id=543141358496383048&client_secret=${client_secret}&code=${code}&redirect_uri=${redirect_uri}&scope=identify`, config)
     .then((res) => {
       let data = res.data;
       response.send(data);
