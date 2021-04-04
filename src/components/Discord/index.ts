@@ -26,24 +26,19 @@ export const Link = async (req: Request, response: Response) => {
           authorization: `${data.token_type} ${data.access_token}`
         }
       }
-      await Axios.post('https://discord.com/api/users/@me', config)
+      await Axios.get('https://discord.com/api/users/@me', config)
         .then((res) => {
-          console.log(res.data);
+          let data = res.data
+          console.log(data)
+          response.send(data)
         })
         .catch((err) => {
-          console.log(err);
-          response.sendStatus(500);
+          console.log(err.data)
+          response.sendStatus(500)
         })
-
-      response.sendStatus(200);
     })
     .catch((err) => {
-      console.log(err);
-      response.sendStatus(500);
+      console.log(err)
+      response.sendStatus(500)
     })
-}
-
-export const Verify = async (req: Request, res: Response) => {
-  res.send({});
-  res.sendStatus(200);
 }
