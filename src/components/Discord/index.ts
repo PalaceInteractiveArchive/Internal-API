@@ -12,8 +12,8 @@ export const Link = async (req: Request, response: Response) => {
     client_secret: client_secret,
     code: code.toString(),
     grant_type: 'authorization_code',
-    scope: 'identify',
     redirect_uri: redirect_uri,
+    scope: 'identify',
   }
   const config = {
     headers: {'content-type': 'application/x-www-form-urlencoded'}
