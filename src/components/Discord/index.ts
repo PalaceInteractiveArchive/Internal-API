@@ -4,7 +4,7 @@ import { Request, Response } from 'express'
 export const Link = async (req: Request, response: Response) => {
   const client_id = '543141358496383048';
   const client_secret = 'RI_ubQFraTuKXPS9JFuczgZdF--4RaUX';
-  const redirect_uri = 'https://dev-internal-api.palace.network/discord/verify';
+  const redirect_uri = 'https://dev-internal-api.palace.network/discord/link';
 
   let code = req.query.code;
   let data = {
@@ -19,9 +19,23 @@ export const Link = async (req: Request, response: Response) => {
     headers: {'content-type': 'application/x-www-form-urlencoded'}
   }
   await Axios.post('https://discord.com/api/oauth2/token', new URLSearchParams(data), config)
-    .then((res) => {
+    .then(async (res) => {
       let data = res.data;
-      response.send(data);
+      let config = {
+        headers: {
+          authorization: `${data.token_type} ${data.access_token}`
+        }
+      }
+      await Axios.post('https://discord.com/api/users/@me', config)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+          response.sendStatus(500);
+        })
+
+      response.sendStatus(200);
     })
     .catch((err) => {
       console.log(err);
