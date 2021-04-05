@@ -1,13 +1,15 @@
 import Axios from "axios"
 import { mongoDPlayer } from "./model";
 
-export const BotServerCheck = async (id: number, uuid: any) => {
-  const config = {
-    headers: {
-      Authorization: "Bot NTQzMTQxMzU4NDk2MzgzMDQ4.XFx9zg.8cxp7dBLDgjjvkrXyErfrDZqGeE"
-    }
+const config = {
+  headers: {
+    Authorization: "Bot NTQzMTQxMzU4NDk2MzgzMDQ4.XFx9zg.8cxp7dBLDgjjvkrXyErfrDZqGeE"
   }
-  await Axios.get(`https://discord.com/api/guilds/809995525210243072/members/${id}`, config)
+}
+const palaceGuildID = "809995525210243072"
+
+export const BotServerCheck = async (id: number, uuid: any) => {
+  await Axios.get(`https://discord.com/api/guilds/${palaceGuildID}/members/${id}`, config)
     .then(async (res) => {
       let data = res.data;
       if (!data) {
