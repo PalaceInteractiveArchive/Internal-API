@@ -1,7 +1,7 @@
 import Axios from 'axios'
 import { Request, Response } from 'express'
 import { mongoDPlayer } from './model';
-import { BotServerCheck } from './service';
+import { BotServerCheck} from './service';
 
 export const Link = async (req: Request, response: Response) => {
   const client_id = '543141358496383048';
@@ -37,7 +37,9 @@ export const Link = async (req: Request, response: Response) => {
           let data = res.data
           await mongoDPlayer.findOneAndUpdate({uuid: uuid}, {$set: { 'discord.discordID': data.id}})
           BotServerCheck(data.id, uuid)
-            .then(() => response.send(data));
+            .then(() => {
+              response.send(data)
+            })
         })
         .catch((err) => {
           console.log(err.data)
