@@ -1,3 +1,4 @@
+import Logger from '@/utils/Logger';
 import Axios from 'axios'
 import { Request, Response } from 'express'
 import { mongoDPlayer } from './model';
@@ -42,12 +43,12 @@ export const Link = async (req: Request, response: Response) => {
             })
         })
         .catch((err) => {
-          console.log(err.data)
+          Logger.error(err.data)
           response.status(500).send({message: 'Failed to fetch discord user data.'})
         })
     })
     .catch((err) => {
-      console.log(err)
+      Logger.error(err.data)
       response.sendStatus(500)
     })
 }

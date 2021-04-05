@@ -1,3 +1,4 @@
+import Logger from "@/utils/Logger";
 import Axios from "axios"
 import { mongoDPlayer } from "./model";
 
@@ -13,15 +14,15 @@ export const BotServerCheck = async (id: number, uuid: any) => {
     .then(async (res) => {
       let data = res.data;
       if (!data) {
-        console.log('This user is not apart of our Discord server!');
+        Logger.warn('This user does not belong to our Discord server!');
         await mongoDPlayer.findOneAndUpdate({ uuid: uuid }, { $unset: { 'discord': ""} }, () => {
-          console.log
+          Logger.info
         })
       } else {
-        console.log(data.user);
+        Logger.info(data.user);
       }
     })
     .catch((err) => {
-      console.log(err);
+      Logger.error(err);
     })
 }
