@@ -1,12 +1,13 @@
 import Logger from '@/utils/Logger';
 import Axios from 'axios'
+import Config from '@/config/env';
 import { Request, Response } from 'express'
 import { mongoDPlayer } from './model';
 import { BotServerCheck} from './service';
 
 export const Link = async (req: Request, response: Response) => {
-  const client_id = '543141358496383048';
-  const client_secret = 'RI_ubQFraTuKXPS9JFuczgZdF--4RaUX';
+  const client_id = Config.discord.clientId;
+  const client_secret = Config.discord.clientSecret;
   const redirect_uri = 'https://dev-internal-api.palace.network/discord/link';
 
   let code = req.query.code;

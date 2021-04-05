@@ -1,13 +1,14 @@
-import Logger from "@/utils/Logger";
-import Axios from "axios"
+import Logger from '@/utils/Logger';
+import Axios from 'axios'
+import Config from '@/config/env';
 import { mongoDPlayer } from "./model";
 
 const config = {
   headers: {
-    Authorization: "Bot NTQzMTQxMzU4NDk2MzgzMDQ4.XFx9zg.8cxp7dBLDgjjvkrXyErfrDZqGeE"
+    Authorization: `Bot ${Config.discord.botToken}`
   }
 }
-const palaceGuildID = "809995525210243072"
+const palaceGuildID = Config.discord.guildId
 
 export const BotServerCheck = async (id: number, uuid: any) => {
   await Axios.get(`https://discord.com/api/guilds/${palaceGuildID}/members/${id}`, config)
