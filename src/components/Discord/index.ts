@@ -3,7 +3,6 @@ import Axios from 'axios'
 import Config from '@/config/env';
 import { Request, Response } from 'express'
 import { mongoDPlayer } from './model';
-import { BotServerCheck} from './service';
 
 export const Link = async (req: Request, response: Response) => {
   const client_id = Config.discord.clientId;
@@ -20,7 +19,7 @@ export const Link = async (req: Request, response: Response) => {
     redirect_uri: redirect_uri,
     scope: 'identify',
   }
-  const config = {
+  let config = {
     headers: {'content-type': 'application/x-www-form-urlencoded'}
   }
   await Axios.post('https://discord.com/api/oauth2/token', new URLSearchParams(data), config)
@@ -54,11 +53,30 @@ export const Link = async (req: Request, response: Response) => {
     })
 }
 
-export const Verify = async (req: Request, response: Response) => {
-  // const user = req.params.user;
+const BotServerCheck = async (id: number, uuid: any) => {
+  const palaceGuildId = Config.discord.guildId
 
+  let config = {
+    headers: {
+      authorization: `Bot ${Config.discord.botToken}`
+    }
+  }
+
+  await Axios.get(`https://discord.com/api/guilds${palaceGuildId}/members/${id}`, config)
+    .then(async (res) => {
+      let data = res.data;
+      if (!data) {
+        Logger.warn('This user does not belong to our Discord server!');
+        await mongoDPlayer.findOneAndUpdate({uuid: uuid}, {$unset: { 'discord': ''}}, () => {
+          Logger.info
+        })
+      }
+      Logger.info(data.user)
+    })
+    .catch((err) => {
+      Logger.error(err)
+    })
 }
-
 
 export const Unlink = async (req: Request, response: Response) => {
 
