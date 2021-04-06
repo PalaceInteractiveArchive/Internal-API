@@ -161,7 +161,7 @@ export class MessageQueue {
                                     var value = obj.value;
                                     tags[key] = value;
                                 }
-                                
+
                                 influx.influx.writePoints([{
                                     measurement,
                                     tags,
@@ -182,6 +182,15 @@ export class MessageQueue {
                     }
                 }, { noAck: false });
             });
+
+          connection.createChannel((err2: any, channel: amqp.Channel) => {
+            if (err2) throw err2;
+            let queue = '';
+
+            channel.assertQueue(queue, {
+              durable: false
+            })
+          })
         });
     }
 }
