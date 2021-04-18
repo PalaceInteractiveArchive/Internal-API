@@ -1,7 +1,7 @@
 import Logger from '@/utils/Logger';
 import Axios from 'axios'
 import Config from '@/config/env';
-import { Request, Response } from 'express'
+import { Request, response, Response } from 'express'
 import { mongoDPlayer } from './model';
 
 export const Link = async (req: Request, response: Response) => {
@@ -38,9 +38,9 @@ export const Link = async (req: Request, response: Response) => {
           let data = res.data
           await mongoDPlayer.findOneAndUpdate({uuid: uuid}, {$set: { 'discord.discordID': data.id}})
           BotServerCheck(data.id, uuid)
-            .then(() => {
-              response.send(data)
-            })
+          .then(() => {
+            response.send(data)
+          })
         })
         .catch((err) => {
           Logger.error(err.data)
@@ -68,7 +68,7 @@ const BotServerCheck = async (id: number, uuid: any) => {
       if (!data) {
         Logger.warn('This user does not belong to our Discord server!');
         await mongoDPlayer.findOneAndUpdate({uuid: uuid}, {$unset: { 'discord': ''}}, () => {
-          Logger.info
+          response.status(200).send({ message: 'User is not part of our discord.'});
         })
       }
       Logger.info(data.user)

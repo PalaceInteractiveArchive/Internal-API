@@ -1,9 +1,9 @@
-import amqp = require('amqplib/callback_api')
-import config from '@/config/env';
+// import amqp = require('amqplib/callback_api')
+// import config from '@/config/env';
 
-class DiscordMQ {
-  public initDiscordListenerQueue: any = {
+// class DiscordMQ {
+//   public initDiscordListenerQueue: any = {
 
-  }
-}
-export default DiscordMQ;
+//   }
+// }
+// export default DiscordMQ;

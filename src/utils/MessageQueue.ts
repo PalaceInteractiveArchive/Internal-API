@@ -185,10 +185,17 @@ export class MessageQueue {
 
           connection.createChannel((err2: any, channel: amqp.Channel) => {
             if (err2) throw err2;
-            let queue = '';
+            let queue = 'all_mc';
 
             channel.assertQueue(queue, {
               durable: false
+            })
+
+            console.log(" [*] Waiting for messages in %s", queue);
+            channel.consume(queue, (msg) => {
+                console.log("[*] Receieved %s", msg.content.toString());
+            }, {
+                noAck: true
             })
           })
         });
