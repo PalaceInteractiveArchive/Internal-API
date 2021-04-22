@@ -27,7 +27,9 @@ const config = {
         port: parseInt(process.env.mqPort),
         username: process.env.mqUsername,
         password: process.env.mqPassword,
-        vhost: process.env.mqVhost
+        vhost: process.env.mqVhost,
+        discordUsername: process.env.discordMqUsername,
+        discordPassword: process.env.discordMqPassword
     },
     influx: {
         host: process.env.influxHost,

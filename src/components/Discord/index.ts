@@ -1,8 +1,12 @@
 import Logger from '@/utils/Logger';
 import Axios from 'axios'
 import Config from '@/config/env';
-import { Request, response, Response } from 'express'
+import { Request, Response } from 'express'
 import { mongoDPlayer } from './model';
+import { DiscordQueue } from '@/utils/DiscordQueue';
+
+const discordQueue: DiscordQueue = new DiscordQueue();
+discordQueue.initializeQueueListener();
 
 export const Link = async (req: Request, response: Response) => {
   const client_id = Config.discord.clientId;
@@ -36,11 +40,11 @@ export const Link = async (req: Request, response: Response) => {
       await Axios.get('https://discord.com/api/users/@me', config)
         .then(async (res) => {
           let data = res.data
-          await mongoDPlayer.findOneAndUpdate({uuid: uuid}, {$set: { 'discord.discordID': data.id}})
-          BotServerCheck(data.id, uuid)
-          .then(() => {
-            response.send(data)
+          await mongoDPlayer.findOneAndUpdate({uuid: uuid}, {$set: { 'discord.discordID': data.id}}, (e: any, doc: any) => {
+            discordQueue.sendQueueMsg({id: 1, rank: doc.rank, username: doc.username, user: data.id, tags: doc.tags});
+            response.redirect('https://discord.palace.network/?status=linked');
           })
+          
         })
         .catch((err) => {
           Logger.error(err.data)
@@ -50,31 +54,6 @@ export const Link = async (req: Request, response: Response) => {
     .catch((err) => {
       Logger.error(err.data)
       response.sendStatus(500)
-    })
-}
-
-const BotServerCheck = async (id: number, uuid: any) => {
-  const palaceGuildId = Config.discord.guildId
-
-  let config = {
-    headers: {
-      authorization: `Bot ${Config.discord.botToken}`
-    }
-  }
-
-  await Axios.get(`https://discord.com/api/guilds${palaceGuildId}/members/${id}`, config)
-    .then(async (res) => {
-      let data = res.data;
-      if (!data) {
-        Logger.warn('This user does not belong to our Discord server!');
-        await mongoDPlayer.findOneAndUpdate({uuid: uuid}, {$unset: { 'discord': ''}}, () => {
-          response.status(200).send({ message: 'User is not part of our discord.'});
-        })
-      }
-      Logger.info(data.user)
-    })
-    .catch((err) => {
-      Logger.error(err)
     })
 }
 

@@ -4,6 +4,8 @@ import * as mongodb from '@/config/db/mongodb';
 let PlayerSchema = new Schema({
   uuid: String,
   username: String,
+  rank: String,
+  tags: [String],
   discord: {
     access_token: String,
     expires_in: Number,
