@@ -20,7 +20,7 @@ export function configure(app: express.Application): void {
             extended: false,
         })
     );
-    app.use(bodyParser.json());
+    app.use(bodyParser.json({limit: '50mb'}));
     // parse Cookie header and populate req.cookies with an object keyed by the cookie names.
     app.use(cookieParser());
     // returns the compression middleware
@@ -52,14 +52,17 @@ export function initErrorHandler(app: express.Application): void {
         }
 
         if (error instanceof HttpError) {
-            res.sendHttpError(error);
+            res.status(500)
+            res.send(error);
         } else {
             if (app.get('env') === 'development') {
                 error = new HttpError(HttpStatus.INTERNAL_SERVER_ERROR, error.message);
-                res.sendHttpError(error);
+                res.status(500)
+                res.send(error);
             } else {
                 error = new HttpError(HttpStatus.INTERNAL_SERVER_ERROR);
-                res.sendHttpError(error, error.message);
+                res.status(500)
+                res.send(error.message);
             }
         }
 
