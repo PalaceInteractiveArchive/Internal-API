@@ -14,7 +14,7 @@ export const Link = async (req: Request, response: Response) => {
   const redirect_uri = 'https://dev-internal-api.palace.network/discord/link';
 
   let code = req.query.code;
-  let uuid = req.query.state;
+  let uuid = req.query.state as string;
   let data = {
     client_id: client_id,
     client_secret: client_secret,
@@ -26,11 +26,12 @@ export const Link = async (req: Request, response: Response) => {
   let config = {
     headers: {'content-type': 'application/x-www-form-urlencoded'}
   }
+  let decodedUUID = Buffer.from(uuid, 'base64').toString('ascii');
   await Axios.post('https://discord.com/api/oauth2/token', new URLSearchParams(data), config)
     .then(async (res) => {
       let data = res.data;
       await mongoDPlayer.findOneAndUpdate(
-        { uuid: uuid },
+        { uuid: decodedUUID },
         { $set: {'discord.access_token': data.access_token, 'discord.expires_in': data.expires_in, 'discord.refresh_token': data.refresh_token}})
       let config = {
         headers: {
@@ -40,7 +41,7 @@ export const Link = async (req: Request, response: Response) => {
       await Axios.get('https://discord.com/api/users/@me', config)
         .then(async (res) => {
           let data = res.data
-          await mongoDPlayer.findOneAndUpdate({uuid: uuid}, {$set: { 'discord.discordID': data.id}}, (e: any, doc: any) => {
+          await mongoDPlayer.findOneAndUpdate({uuid: decodedUUID}, {$set: { 'discord.discordID': data.id}}, (e: any, doc: any) => {
             discordQueue.sendQueueMsg({id: 1, rank: doc.rank, username: doc.username, user: data.id, tags: doc.tags});
             response.redirect('https://discord.palace.network/?status=linked');
           })
