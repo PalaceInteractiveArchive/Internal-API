@@ -316,7 +316,7 @@ export async function returnAllowed(
               apps.push(entry);
             }
             for (var element of tags) {
-              if (entry.selectedUsers.includes(element)) {
+              if (entry.selectedUsers.includes(element.toString())) {
                 apps.push(entry);
                 break;
               }
