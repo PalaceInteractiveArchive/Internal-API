@@ -11,7 +11,7 @@ discordQueue.initializeQueueListener();
 export const Link = async (req: Request, response: Response) => {
   const client_id = Config.discord.clientId;
   const client_secret = Config.discord.clientSecret;
-  const redirect_uri = 'https://dev-internal-api.palace.network/discord/link';
+  const redirect_uri = 'https://internal-api.palace.network/discord/link';
 
   let code = req.query.code;
   let uuid = req.query.state as string;
