@@ -43,13 +43,13 @@ export const Link = async (req: Request, response: Response) => {
           let data = res.data
           await mongoDPlayer.findOneAndUpdate({uuid: decodedUUID}, {$set: { 'discord.discordID': data.id}}, (e: any, doc: any) => {
             discordQueue.sendQueueMsg({id: 1, rank: doc.rank, username: doc.username, user: data.id, tags: doc.tags});
-            response.redirect('https://discord.palace.network/success');
+            response.redirect(`https://discord.palace.network/success/${decodedUUID}`);
           })
 
         })
         .catch((err) => {
           Logger.error(err.data)
-          response.redirect('https://discord.palace.network/failed');
+          response.redirect(`https://discord.palace.network/failed/${decodedUUID}`);
         })
     })
     .catch((err) => {
