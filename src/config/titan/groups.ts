@@ -10,5 +10,6 @@ export enum groups{
     group35 = 'Technician',
     group37 = 'Media Team',
     group9 = 'Coordinator',
-    group40 = 'P.I. Team'
+    group40 = 'P.I. Team',
+    group10 = 'Trainee'
 }
